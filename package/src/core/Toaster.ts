@@ -25,7 +25,7 @@ export class Toaster {
 
     #container: HTMLDivElement;
 
-    constructor(options: Partial<ToasterOptions>) {
+    constructor(options: Partial<ToasterOptions> = {}) {
         this.defaultOptions = { ...this.defaultOptions, ...options };
         this.#container = this.#createContainer();
         this.positionContainer(this.defaultOptions.position);

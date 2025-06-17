@@ -1,22 +1,27 @@
 {
-    "name": "toast-kit-js",
+    "name": "toast-kit",
     "version": "0.0.0",
     "type": "module",
     "files": [
         "dist"
     ],
-    "main": "./dist/toast-kit-js.umd.cjs",
-    "module": "./dist/toast-kit-js.js",
+    "main": "./dist/toast-kit.umd.cjs",
+    "module": "./dist/toast-kit.es.js",
     "exports": {
         ".": {
-            "import": "./dist/toast-kit-js.js",
-            "require": "./dist/toast-kit-js.umd.cjs"
+            "types": "./dist/index.d.ts",
+            "import": "./dist/toast-kit.es.js",
+            "require": "./dist/toast-kit.umd.cjs"
         },
-        "./style.css": "./dist/my-lib.css"
+        "./style.css": "./dist/toast-kit.css"
     },
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@microsoft/api-extractor": "^7.52.8",
+        "unplugin-dts": "1.0.0-beta.0"
     }
 }
