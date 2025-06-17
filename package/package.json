@@ -16,9 +16,10 @@
         "./style.css": "./dist/toast-kit.css"
     },
     "scripts": {
-        "dev": "vite",
+        "dev": "pnpm watch",
         "build": "tsc && vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "watch": "vite build --watch"
     },
     "devDependencies": {
         "@microsoft/api-extractor": "^7.52.8",
