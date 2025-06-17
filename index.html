@@ -62,9 +62,6 @@
         </style>
     </head>
     <body>
-        <!-- Container for Toasts -->
-        <div id="toast-container" class="toast-container"></div>
-
         <!-- Demo Buttons to Trigger Toasts -->
         <div class="demo-buttons">
             <button id="btn-default">Show Default</button>
@@ -84,11 +81,13 @@
 
             document
                 .getElementById("btn-success")
-                .addEventListener("click", () =>
-                    toaster.success({
-                        message: "Your profile has been updated successfully.",
-                    }),
-                );
+                .addEventListener("click", () => {
+                    toaster.positionContainer("bottom-center"),
+                        toaster.success({
+                            message:
+                                "Your profile has been updated successfully.",
+                        });
+                });
 
             document.getElementById("btn-error").addEventListener("click", () =>
                 toaster.error({
@@ -103,13 +102,15 @@
                 }),
             );
 
-            document.getElementById("btn-info").addEventListener("click", () =>
-                toaster.warning({
-                    title: "Session Expiring",
-                    message: "Your session will expire in 2 minutes.",
-                    duration: 7000,
-                }),
-            );
+            document
+                .getElementById("btn-warning")
+                .addEventListener("click", () =>
+                    toaster.warning({
+                        title: "Session Expiring",
+                        message: "Your session will expire in 2 minutes.",
+                        duration: 7000,
+                    }),
+                );
         </script>
     </body>
 </html>

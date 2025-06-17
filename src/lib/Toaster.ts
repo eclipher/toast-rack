@@ -1,32 +1,18 @@
-export type ToastPosition =
-    | "top-start"
-    | "top-center"
-    | "top-end"
-    | "bottom-start"
-    | "bottom-center"
-    | "bottom-end";
-
-export type ToastType = "info" | "success" | "error" | "warning";
-
-interface ToastOptions {
-    id: string | (() => string);
-    title: string;
-    message: string;
-    type: ToastType;
-    duration: number;
-    position: ToastPosition;
-    dismissible: boolean;
-}
+import type {
+    ToasterOptions,
+    ToastOptions,
+    ToastPosition,
+    ToastType,
+} from "./types";
 
 export class Toaster {
-    defaultOptions: ToastOptions = {
-        id: () => `toast` + crypto.randomUUID(),
+    defaultOptions: Omit<ToasterOptions, "id"> = {
         title: "Notification",
         message: "This is a default toast message.",
         type: "info",
         duration: 5000,
         dismissible: true,
-        position: "top-end",
+        position: "top-right",
     };
 
     // Icons for different toast types
@@ -37,41 +23,58 @@ export class Toaster {
         warning: "⚠",
     };
 
-    container: HTMLElement | null;
+    #container: HTMLDivElement;
 
-    constructor(options: Partial<ToastOptions>) {
+    constructor(options: Partial<ToasterOptions>) {
         this.defaultOptions = { ...this.defaultOptions, ...options };
-        this.container = document.getElementById("toast-container");
+        this.#container = this.#createContainer();
+        this.positionContainer(this.defaultOptions.position);
+    }
 
-        if (!this.container) {
-            throw new Error(
-                "Toast container not found! Please create a element with id `toast-container` in your document first.",
-            );
-        }
+    count = 0;
+    #generateId() {
+        this.count++;
+        return this.count.toString();
+    }
+
+    #createContainer() {
+        const container = document.createElement("div");
+        container.popover = "manual";
+        document.body.append(container);
+        container.showPopover();
+
+        return container;
+    }
+
+    positionContainer(position: ToastPosition) {
+        this.#container.className = `toast-container ${position.replace("-", " ")}`;
     }
 
     // The main function to create and show a toast
     show(options: Partial<ToastOptions> = {}): string {
-        const config: ToastOptions = { ...this.defaultOptions, ...options };
+        const config: Omit<ToastOptions, "id"> & { id?: string } = {
+            ...this.defaultOptions,
+            ...options,
+        };
 
         // Create toast element
         const toast = document.createElement("div");
-        const id = typeof config.id === "function" ? config.id() : config.id;
+        const id = config.id ?? this.#generateId();
         toast.className = `toast ${config.type}`;
         toast.id = id;
 
         // Add content to the toast
         toast.innerHTML = `
-                    <div class="toast-icon">${this.icons[config.type] || this.icons.info}</div>
-                    <div class="toast-content">
-                        <p class="toast-title">${config.title}</p>
-                        <p class="toast-message">${config.message}</p>
-                    </div>
-                    ${config.dismissible ? '<button class="toast-close">&times;</button>' : ""}
-                `;
+            <div class="toast-icon">${this.icons[config.type] || this.icons.info}</div>
+            <div class="toast-content">
+                <p class="toast-title">${config.title}</p>
+                <p class="toast-message">${config.message}</p>
+            </div>
+            ${config.dismissible ? '<button class="toast-close">&times;</button>' : ""}
+        `;
 
         // Add toast to the container
-        this.container?.appendChild(toast);
+        this.#container.append(toast);
 
         // Animate in
         setTimeout(() => {
@@ -105,19 +108,13 @@ export class Toaster {
         toast.classList.remove("show");
         toast.classList.add("hide");
         // Remove the element after the animation completes
-        toast.addEventListener(
-            "transitionend",
-            () => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            },
-            { once: true },
-        );
+        toast.addEventListener("transitionend", () => toast.remove(), {
+            once: true,
+        });
     }
 
     #showWithType(type: ToastType, options: Partial<ToastOptions>) {
-        this.show({
+        return this.show({
             ...options,
             type: type,
             title: options.title ?? type[0].toUpperCase() + type.slice(1),
@@ -125,18 +122,18 @@ export class Toaster {
     }
 
     success(options: Partial<ToastOptions>) {
-        this.#showWithType("success", options);
+        return this.#showWithType("success", options);
     }
 
     error(options: Partial<ToastOptions>) {
-        this.#showWithType("error", options);
+        return this.#showWithType("error", options);
     }
 
     info(options: Partial<ToastOptions>) {
-        this.#showWithType("info", options);
+        return this.#showWithType("info", options);
     }
 
     warning(options: Partial<ToastOptions>) {
-        this.#showWithType("warning", options);
+        return this.#showWithType("warning", options);
     }
 }
