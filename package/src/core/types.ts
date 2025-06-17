@@ -6,14 +6,13 @@ export type ToastPosition =
     | "bottom-center"
     | "bottom-right";
 
-export type ToastType = "info" | "success" | "error" | "warning";
+export type ToastType = "info" | "success" | "error" | "warning" | "loading";
 
 export interface ToastOptions {
     id: string;
     title: string;
-    message: string;
     type: ToastType;
-    duration: number;
+    durationMs: number;
     dismissible: boolean;
 }
 

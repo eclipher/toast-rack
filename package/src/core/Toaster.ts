@@ -5,12 +5,15 @@ import type {
     ToastType,
 } from "./types";
 
+type ToastOptionsWithMessage = Partial<ToastOptions> & {
+    message: string;
+};
+
 export class Toaster {
     defaultOptions: Omit<ToasterOptions, "id"> = {
         title: "Notification",
-        message: "This is a default toast message.",
         type: "info",
-        duration: 5000,
+        durationMs: 5000,
         dismissible: true,
         position: "top-right",
     };
@@ -21,20 +24,22 @@ export class Toaster {
         error: "✖",
         info: "ℹ",
         warning: "⚠",
+        loading: "↻",
     };
 
     #container: HTMLDivElement;
+    toastTimeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
 
     constructor(options?: Partial<ToasterOptions>) {
         this.defaultOptions = { ...this.defaultOptions, ...options };
         this.#container = this.#createContainer();
-        this.positionContainer(this.defaultOptions.position);
+        this.changePosition(this.defaultOptions.position);
     }
 
     count = 0;
     #generateId() {
         this.count++;
-        return this.count.toString();
+        return `toast-${this.count};`;
     }
 
     #createContainer() {
@@ -46,20 +51,38 @@ export class Toaster {
         return container;
     }
 
-    positionContainer(position: ToastPosition) {
+    changePosition(position: ToastPosition) {
         this.#container.className = `toast-container ${position.replace("-", " ")}`;
     }
 
+    #findToastEl(id: string) {
+        return (
+            this.#container.children as HTMLCollectionOf<HTMLElement>
+        ).namedItem(id);
+    }
+
+    isEmpty() {
+        return this.#container.children.length === 0;
+    }
+
     // The main function to create and show a toast
-    show(options: Partial<ToastOptions> = {}): string {
-        const config: Omit<ToastOptions, "id"> & { id?: string } = {
+    #createToast(options: ToastOptionsWithMessage): string {
+        const config: Omit<ToastOptions, "id"> & {
+            id?: string;
+            message: string;
+        } = {
             ...this.defaultOptions,
             ...options,
         };
 
-        // Create toast element
-        const toast = document.createElement("div");
+        let toast: HTMLElement | null = null;
+        // reuse existing toasts if exist
+        if (config.id) toast = this.#findToastEl(config.id);
+        // otherwise create a new element
+        if (!toast) toast = document.createElement("article");
+
         const id = config.id ?? this.#generateId();
+
         toast.className = `toast ${config.type}`;
         toast.id = id;
 
@@ -82,15 +105,21 @@ export class Toaster {
         }, 100); // Small delay to allow CSS transition
 
         // Auto-dismiss functionality
-        const dismissTimeout = setTimeout(() => {
+        if (config.durationMs !== Infinity) {
+            // clean up existing timeout
+            clearTimeout(this.toastTimeoutMap.get(id));
+            this.toastTimeoutMap.set(
+                id,
+                setTimeout(() => {
             this.dismiss(id);
-        }, config.duration);
+                }, config.durationMs),
+            );
+        }
 
         // Handle manual closing
         if (config.dismissible) {
             const closeButton = toast.querySelector(".toast-close");
             closeButton!.addEventListener("click", () => {
-                clearTimeout(dismissTimeout);
                 this.dismiss(id);
             });
         }
@@ -100,11 +129,17 @@ export class Toaster {
 
     // Function to hide and remove a toast
     dismiss(toastId: string) {
-        const toast = document.getElementById(toastId);
+        const toast = this.#findToastEl(toastId);
         if (!toast) {
             console.error("No toast found to dismiss");
             return;
         }
+        const timeout = this.toastTimeoutMap.get(toastId);
+        if (timeout) {
+            clearTimeout(timeout);
+            this.toastTimeoutMap.delete(toastId);
+        }
+
         toast.classList.remove("show");
         toast.classList.add("hide");
         // Remove the element after the animation completes
@@ -113,27 +148,45 @@ export class Toaster {
         });
     }
 
-    #showWithType(type: ToastType, options: Partial<ToastOptions>) {
-        return this.show({
+    // public-facing method with `message` as first argument
+    toast(message: string, options: Partial<ToastOptions> = {}) {
+        return this.#createToast({ ...options, message });
+    }
+
+    #createWithType(type: ToastType, options: ToastOptionsWithMessage) {
+        return this.#createToast({
             ...options,
             type: type,
-            title: options.title ?? type[0].toUpperCase() + type.slice(1),
+            title: options?.title ?? type[0].toUpperCase() + type.slice(1),
         });
     }
 
-    success(options: Partial<ToastOptions>) {
-        return this.#showWithType("success", options);
+    success(message: string, options?: Partial<ToastOptions>) {
+        return this.#createWithType("success", { ...options, message });
     }
 
-    error(options: Partial<ToastOptions>) {
-        return this.#showWithType("error", options);
+    error(message: string, options?: Partial<ToastOptions>) {
+        return this.#createWithType("error", { ...options, message });
     }
 
-    info(options: Partial<ToastOptions>) {
-        return this.#showWithType("info", options);
+    info(message: string, options?: Partial<ToastOptions>) {
+        return this.#createWithType("info", { ...options, message });
     }
 
-    warning(options: Partial<ToastOptions>) {
-        return this.#showWithType("warning", options);
+    warning(message: string, options?: Partial<ToastOptions>) {
+        return this.#createWithType("warning", { ...options, message });
     }
+
+    /** Render a toast of "loading" type. By default, this kind of toast will stay on screen forever and cannot be dismissed by user. You can either:
+     * - Programmatically remove it via `toaster.remove()`.
+     * - Or explicitly pass `dismissible` and `duration` to override the default option.  */
+    loading(message: string, options?: Partial<ToastOptions>) {
+        return this.#createWithType("loading", {
+            durationMs: Infinity,
+            dismissible: false,
+            ...options,
+            message,
+        });
+    }
+
 }
