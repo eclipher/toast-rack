@@ -1,0 +1,22 @@
+{
+    "name": "toast-kit-js",
+    "version": "0.0.0",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/toast-kit-js.umd.cjs",
+    "module": "./dist/toast-kit-js.js",
+    "exports": {
+        ".": {
+            "import": "./dist/toast-kit-js.js",
+            "require": "./dist/toast-kit-js.umd.cjs"
+        },
+        "./style.css": "./dist/my-lib.css"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview"
+    }
+}
