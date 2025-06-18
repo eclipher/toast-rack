@@ -53,8 +53,8 @@
 }
 
 .toast-container.center {
-    left: 0px;
-    right: 0px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .toast {
