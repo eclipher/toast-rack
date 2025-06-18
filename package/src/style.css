@@ -46,8 +46,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    opacity: 0;
-    transform: translateY(-100%);
+
     transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     min-height: 50px;
 

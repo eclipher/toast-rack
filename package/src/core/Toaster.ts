@@ -76,14 +76,16 @@ export class Toaster {
         };
 
         let toast: HTMLElement | null = null;
-        // reuse existing toasts if exist
+        let isNew = false;
+        // reuse existing toast if exists
         if (config.id) toast = this.#findToastEl(config.id);
         // otherwise create a new element
-        if (!toast) toast = document.createElement("article");
+        if (!toast) {
+            toast = document.createElement("article");
+            isNew = true;
+        }
 
         const id = config.id ?? this.#generateId();
-
-        toast.className = `toast ${config.type}`;
         toast.id = id;
 
         // Add content to the toast
@@ -96,13 +98,20 @@ export class Toaster {
             ${config.dismissible ? '<button class="toast-close">&times;</button>' : ""}
         `;
 
+        // if the toast is new, we hide it first for animate it in later;
+        // otherwise we don't need to hide it
+        toast.className = `toast ${config.type} ${isNew ? "hide" : ""}`;
+
         // Add toast to the container
         this.#container.append(toast);
 
-        // Animate in
+        // Animate in if it's a new toast
+        if (isNew) {
         setTimeout(() => {
+                toast.classList.remove("hide");
             toast.classList.add("show");
         }, 100); // Small delay to allow CSS transition
+        }
 
         // Auto-dismiss functionality
         if (config.durationMs !== Infinity) {
@@ -110,18 +119,14 @@ export class Toaster {
             clearTimeout(this.toastTimeoutMap.get(id));
             this.toastTimeoutMap.set(
                 id,
-                setTimeout(() => {
-            this.dismiss(id);
-                }, config.durationMs),
+                setTimeout(() => this.dismiss(id), config.durationMs),
             );
         }
 
         // Handle manual closing
         if (config.dismissible) {
             const closeButton = toast.querySelector(".toast-close");
-            closeButton!.addEventListener("click", () => {
-                this.dismiss(id);
-            });
+            closeButton!.addEventListener("click", () => this.dismiss(id));
         }
 
         return id;
