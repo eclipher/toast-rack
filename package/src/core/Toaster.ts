@@ -1,14 +1,11 @@
 import type {
     ToasterOptions,
     ToastOptions,
+    ToastOptionsFull,
     ToastPosition,
     ToastType,
 } from "./types";
 import { resolveValue } from "./utils";
-
-type ToastOptionsWithMessage = Partial<ToastOptions> & {
-    message: string;
-};
 
 type PromiseHandler<T> = {
     /**
@@ -31,9 +28,7 @@ type PromiseHandler<T> = {
 };
 
 export class Toaster {
-    defaultOptions: Omit<ToasterOptions, "id"> = {
-        title: "Notification",
-        type: "info",
+    defaultOptions: ToasterOptions = {
         durationMs: 5000,
         dismissible: true,
         position: "top-right",
@@ -76,10 +71,31 @@ export class Toaster {
         this.#container.className = `toast-container ${position.replace("-", " ")}`;
     }
 
-    #findToastEl(id: string) {
-        return (
-            this.#container.children as HTMLCollectionOf<HTMLElement>
-        ).namedItem(id);
+    /**
+     * Get or create a toast element by id.
+     * If no id is given, or the toast with the given id does not exist, it will create a new one.
+     * @param id - The id of the toast to get or create.
+     * @returns The toast element with a defined id.
+     */
+    #getOrCreateToast(id?: string) {
+        if (id) {
+            const toast = (
+                this.#container.children as HTMLCollectionOf<HTMLElement>
+            ).namedItem(id);
+            if (toast) {
+                delete toast.dataset.isNew; // Mark as not new
+                return toast;
+            }
+            console.warn(`Toast with id ${id} not found, creating a new one.`);
+        }
+
+        // If no id is provided,
+        // or the toast with the given id does not exist,
+        // create a new one
+        const toast = document.createElement("article");
+        toast.id = this.#generateId();
+        toast.dataset.isNew = "true"; // Mark as new
+        return toast;
     }
 
     isEmpty() {
@@ -93,33 +109,20 @@ export class Toaster {
     }
 
     // The main function to create and show a toast
-    #createToast(options: ToastOptionsWithMessage): string {
-        const config: Omit<ToastOptions, "id"> & {
-            id?: string;
-            message: string;
-        } = {
+    #createToast(options: Partial<ToastOptionsFull>): string {
+        const config: ToastOptionsFull = {
             ...this.defaultOptions,
             ...options,
+            message: options.message || "",
         };
 
-        let toast: HTMLElement | null = null;
-        let isNew = false;
-        // reuse existing toast if exists
-        if (config.id) toast = this.#findToastEl(config.id);
-        // otherwise create a new element
-        if (!toast) {
-            toast = document.createElement("article");
-            isNew = true;
-        }
-
-        const id = config.id ?? this.#generateId();
-        toast.id = id;
+        const toast = this.#getOrCreateToast(config.id);
 
         // Add content to the toast
         toast.innerHTML = `
-            <div class="toast-icon">${this.icons[config.type] || this.icons.info}</div>
+        ${config.type ? `<div class="toast-icon">${this.icons[config.type]}</div>` : ""}
             <div class="toast-content">
-                <p class="toast-title">${config.title}</p>
+                ${config.title ? `<p class="toast-title">${config.title}</p>` : ""}
                 <p class="toast-message">${config.message}</p>
             </div>
             ${config.dismissible ? '<button class="toast-close">&times;</button>' : ""}
@@ -127,13 +130,13 @@ export class Toaster {
 
         // if the toast is new, we hide it first for animate it in later;
         // otherwise we don't need to hide it
-        toast.className = `toast ${config.type} ${isNew ? "hide" : ""}`;
+        toast.className = `toast ${config.type} ${toast.dataset.isNew ? "hide" : ""}`;
 
         // Add toast to the container
         this.#container.append(toast);
 
         // Animate in if it's a new toast
-        if (isNew) {
+        if (toast.dataset.isNew) {
             setTimeout(() => {
                 toast.classList.remove("hide");
                 toast.classList.add("show");
@@ -143,25 +146,27 @@ export class Toaster {
         // Auto-dismiss functionality
         if (config.durationMs !== Infinity) {
             // clean up existing timeout
-            clearTimeout(this.toastTimeoutMap.get(id));
+            clearTimeout(this.toastTimeoutMap.get(toast.id));
             this.toastTimeoutMap.set(
-                id,
-                setTimeout(() => this.dismiss(id), config.durationMs),
+                toast.id,
+                setTimeout(() => this.dismiss(toast.id), config.durationMs),
             );
         }
 
         // Handle manual closing
         if (config.dismissible) {
             const closeButton = toast.querySelector(".toast-close");
-            closeButton!.addEventListener("click", () => this.dismiss(id));
+            closeButton!.addEventListener("click", () =>
+                this.dismiss(toast.id),
+            );
         }
 
-        return id;
+        return toast.id;
     }
 
     // Function to hide and remove a toast
     dismiss(toastId: string) {
-        const toast = this.#findToastEl(toastId);
+        const toast = this.#getOrCreateToast(toastId);
         if (!toast) {
             console.error("No toast found to dismiss");
             return;
@@ -185,11 +190,14 @@ export class Toaster {
         return this.#createToast({ ...options, message });
     }
 
-    #createWithType(type: ToastType, options: ToastOptionsWithMessage) {
+    #createWithType(
+        type: ToastType,
+        options: Partial<Omit<ToastOptionsFull, "type">>,
+    ) {
         return this.#createToast({
             ...options,
             type: type,
-            title: options?.title ?? type[0].toUpperCase() + type.slice(1),
+            title: options.title ?? type[0].toUpperCase() + type.slice(1),
         });
     }
 

@@ -8,14 +8,19 @@ export type ToastPosition =
 
 export type ToastType = "info" | "success" | "error" | "warning" | "loading";
 
+// public facing
 export interface ToastOptions {
-    id: string;
-    title: string;
-    type: ToastType;
+    id?: string;
+    title?: string;
     durationMs: number;
     dismissible: boolean;
 }
 
-export interface ToasterOptions extends ToastOptions {
+export interface ToastOptionsFull extends ToastOptions {
+    message: string;
+    type?: ToastType;
+}
+
+export interface ToasterOptions extends Omit<ToastOptions, "id"> {
     position: ToastPosition;
 }
