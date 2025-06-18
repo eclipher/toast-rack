@@ -2,59 +2,96 @@
 import { toaster } from "../toaster";
 import Button from "../component/button.vue";
 import ButtonGroup from "../component/button-group.vue";
+
+const types: {
+    label: string;
+    action: () => void;
+    buttonClass?: string;
+}[] = [
+    {
+        label: "Default",
+        action: () => {
+            toaster.toast("This is a default toast.");
+        },
+    },
+    {
+        label: "Success",
+        buttonClass: "btn-success",
+
+        action: () => {
+            toaster.success("Your profile has been updated successfully.");
+        },
+    },
+    {
+        label: "Error",
+        buttonClass: "btn-error",
+
+        action: () => {
+            toaster.error("Failed to upload the file. Please try again.");
+        },
+    },
+    {
+        label: "Info",
+        buttonClass: "btn-info",
+
+        action: () => {
+            toaster.info("You can customize the duration of this toast.", {
+                title: "Did you know?",
+            });
+        },
+    },
+    {
+        label: "Warning",
+        buttonClass: "btn-warning",
+
+        action: () => {
+            toaster.warning("Your session will expire in 2 minutes.", {
+                title: "Session Expiring",
+            });
+        },
+    },
+    {
+        label: "Loading",
+        action: () => {
+            toaster.loading("This toast is loading indefinitely.", {
+                title: "Loading...",
+                dismissible: true,
+            });
+        },
+    },
+    {
+        label: "Promise",
+        action: () => {
+            const promise = new Promise((resolve, reject) => {
+                setTimeout(Math.random() < 0.5 ? resolve : reject, 1000);
+            });
+
+            toaster.promise(
+                promise,
+                {
+                    loading: "Saving...",
+                    success: "Saved successfully.",
+                    error: "Failed to save.",
+                },
+                {
+                    title: "Promise",
+                },
+            );
+        },
+    },
+];
 </script>
 
 <template>
     <h3>Types</h3>
     <ButtonGroup>
-        <Button @click="toaster.toast('This is a default toast.')">
-            Default
-        </Button>
         <Button
-            class="btn-success"
-            @click="
-                toaster.success('Your profile has been updated successfully.')
-            "
+            v-for="type in types"
+            :key="type.label"
+            @click="type.action"
+            :class="type.buttonClass"
         >
-            Success
-        </Button>
-        <Button
-            class="btn-error"
-            @click="
-                toaster.error('Failed to upload the file. Please try again.')
-            "
-        >
-            Error
-        </Button>
-        <Button
-            class="btn-info"
-            @click="
-                toaster.info('You can customize the duration of this toast.', {
-                    title: 'Did you know?',
-                })
-            "
-        >
-            Info
-        </Button>
-        <Button
-            class="btn-warning"
-            @click="
-                toaster.warning('Your session will expire in 2 minutes.', {
-                    title: 'Session Expiring',
-                })
-            "
-        >
-            Warning
-        </Button>
-        <Button
-            @click="
-                toaster.loading('This toast is loading indefinitely.', {
-                    title: 'Loading...',
-                    dismissible: true,
-                })
-            "
-        >
-            Loading
+            {{ type.label }}
         </Button>
     </ButtonGroup>
 </template>
