@@ -75,6 +75,12 @@ export class Toaster {
         this.#container.className = `toast-container ${position.replace("-", " ")}`;
     }
 
+    #getToast(id: string): HTMLElement | null {
+        return (
+            this.#container.children as HTMLCollectionOf<HTMLElement>
+        ).namedItem(id);
+    }
+
     /**
      * Get or create a toast element by id.
      * If no id is given, or the toast with the given id does not exist, it will create a new one.
@@ -83,9 +89,7 @@ export class Toaster {
      */
     #getOrCreateToast(id?: string) {
         if (id) {
-            const toast = (
-                this.#container.children as HTMLCollectionOf<HTMLElement>
-            ).namedItem(id);
+            const toast = this.#getToast(id);
             if (toast) {
                 delete toast.dataset.isNew; // Mark as not new
                 return toast;
@@ -164,7 +168,7 @@ export class Toaster {
 
     // Function to hide and remove a toast
     dismiss(toastId: string) {
-        const toast = this.#getOrCreateToast(toastId);
+        const toast = this.#getToast(toastId);
         if (!toast) {
             console.error("No toast found to dismiss");
             return;
