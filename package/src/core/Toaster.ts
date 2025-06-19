@@ -1,3 +1,4 @@
+import { icons } from "./icons";
 import type {
     ToasterOptions,
     ToastOptions,
@@ -32,15 +33,6 @@ export class Toaster {
         durationMs: 5000,
         dismissible: true,
         position: "top-right",
-    };
-
-    // Icons for different toast types
-    icons: Record<ToastType, string> = {
-        success: "✓",
-        error: "✖",
-        info: "ℹ",
-        warning: "⚠",
-        loading: "↻",
     };
 
     #container: HTMLDivElement;
@@ -120,12 +112,12 @@ export class Toaster {
 
         // Add content to the toast
         toast.innerHTML = `
-        ${config.type ? `<div class="toast-icon">${this.icons[config.type]}</div>` : ""}
+            ${config.type ? `<div class="toast-icon">${icons[config.type]}</div>` : ""}
             <div class="toast-content">
                 ${config.title ? `<p class="toast-title">${config.title}</p>` : ""}
                 <p class="toast-message">${config.message}</p>
             </div>
-            ${config.dismissible ? '<button class="toast-close">&times;</button>' : ""}
+            ${config.dismissible ? `<button class="toast-close">${icons.close}</button>` : ""}
         `;
 
         // if the toast is new, we hide it first for animate it in later;
