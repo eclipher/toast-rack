@@ -51,7 +51,19 @@ export class Toaster {
     }
 
     #createContainer() {
+        const existingContainer = document.getElementById(
+            "toast-kit-container",
+        );
+        // If the container already exists, use it
+        if (existingContainer) {
+            console.warn(
+                "Toaster container already exists. Using the existing one.",
+            );
+            return existingContainer as HTMLDivElement;
+        }
         const container = document.createElement("div");
+
+        container.id = "toast-kit-container";
         container.popover = "manual";
         document.body.append(container);
         container.showPopover();
