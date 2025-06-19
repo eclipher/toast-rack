@@ -127,13 +127,7 @@ export class Toaster {
         // Add toast to the container
         this.#container.append(toast);
 
-        // Animate in if it's a new toast
-        if (toast.dataset.isNew) {
-            setTimeout(() => {
-                toast.classList.remove("hide");
-                toast.classList.add("show");
-            }, 100); // Small delay to allow CSS transition
-        }
+        setTimeout(() => toast.classList.add("visible"), 0); // Trigger CSS transition
 
         // Auto-dismiss functionality
         if (config.durationMs !== Infinity) {
@@ -169,8 +163,7 @@ export class Toaster {
             this.toastTimeoutMap.delete(toastId);
         }
 
-        toast.classList.remove("show");
-        toast.classList.add("hide");
+        toast.classList.remove("visible");
         // Remove the element after the animation completes
         toast.addEventListener("transitionend", () => toast.remove(), {
             once: true,
