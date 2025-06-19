@@ -126,15 +126,15 @@ export class Toaster {
         toast.innerHTML = `
             ${config.type ? `<div class="toast-icon">${icons[config.type]}</div>` : ""}
             <div class="toast-content">
-                ${config.title ? `<p class="toast-title">${config.title}</p>` : ""}
-                <p class="toast-message">${config.message}</p>
+                ${config.title ? `<p class="toast-title ${config.classes?.title || ""}">${config.title}</p>` : ""}
+                <p class="toast-message ${config.classes?.message || ""}">${config.message}</p>
             </div>
-            ${config.dismissible ? `<button class="toast-close">${icons.close}</button>` : ""}
+            ${config.dismissible ? `<button class="toast-close ${config.classes?.close || ""}">${icons.close}</button>` : ""}
         `;
 
-        // if the toast is new, we hide it first for animate it in later;
-        // otherwise we don't need to hide it
-        toast.className = `toast ${config.type} ${toast.dataset.isNew ? "hide" : ""}`;
+        toast.className = `toast ${config.type || ""} ${config.classes?.toast || ""} `;
+        toast.style.cssText = config.style || "";
+        toast.dataset.styled = config.unstyled ? "false" : "true";
 
         // Add toast to the container
         this.#container.append(toast);

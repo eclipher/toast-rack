@@ -14,6 +14,14 @@ export interface ToastOptions {
     title?: string;
     durationMs: number;
     dismissible: boolean;
+    unstyled?: boolean;
+    classes?: {
+        toast?: string;
+        title?: string;
+        message?: string;
+        close?: string;
+    };
+    style?: string;
 }
 
 export interface ToastOptionsFull extends ToastOptions {
