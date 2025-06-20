@@ -30,7 +30,7 @@ type PromiseHandler<T> = {
 
 export class Toaster {
     defaultOptions: ToasterOptions = {
-        durationMs: 5000,
+        durationMs: 3000,
         dismissible: true,
         position: "top-right",
     };
@@ -110,8 +110,8 @@ export class Toaster {
         return this.#container.children.length === 0;
     }
 
-    clear() {
-        this.toastTimeoutMap.forEach((timeout) => clearTimeout(timeout));
+    dismissAll() {
+        this.toastTimeoutMap.forEach((_timeout, id) => this.dismiss(id));
         this.toastTimeoutMap.clear();
         this.#container.innerHTML = "";
     }
@@ -143,7 +143,11 @@ export class Toaster {
         // Add toast to the container
         this.#container.append(toast);
 
-        setTimeout(() => toast.classList.add("visible"), 0); // Trigger CSS transition
+        if (toast.dataset.isNew) {
+            setTimeout(() => toast.classList.add("visible"), 0); // Trigger CSS transition
+        } else {
+            toast.classList.add("visible"); // If not new, just add the visible class
+        }
 
         // Auto-dismiss functionality
         if (config.durationMs !== Infinity) {
@@ -242,7 +246,10 @@ export class Toaster {
         handlers: PromiseHandler<T>,
         options: Omit<Partial<ToastOptions>, "type" | "id"> = {},
     ) {
-        const id = this.loading(handlers.loading, options);
+        const id = this.loading(handlers.loading, {
+            durationMs: Infinity, // Keep the loading toast on screen indefinitely until resolved (in case user specifies `durationMs`)
+            ...options,
+        });
 
         const p = resolveValue(promise);
 
