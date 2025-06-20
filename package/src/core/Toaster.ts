@@ -200,7 +200,10 @@ export class ToastRack {
         return this.#createToast({
             ...options,
             type: type,
-            title: options.title ?? type[0].toUpperCase() + type.slice(1),
+            title:
+                options.title ??
+                this.defaultOptions.title ??
+                type[0].toUpperCase() + type.slice(1),
         });
     }
 
