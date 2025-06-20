@@ -1,3 +1,20 @@
-@import "@fontsource-variable/inter";
-
 @import "toast-kit/style.css";
+@import "tailwindcss";
+
+:root {
+    --primary-color: #4f46e5;
+    --primary-light: #818cf8;
+    --primary-dark: #3730a3;
+}
+
+@theme inline {
+    --color-primary: var(--primary-color);
+}
+
+.t-container {
+    @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+button {
+    cursor: pointer;
+}

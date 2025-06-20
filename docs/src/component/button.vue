@@ -1,31 +1,24 @@
 <script setup lang="ts">
-import type { ButtonHTMLAttributes } from "vue";
-
-const { type = "button" } = defineProps<{
-    type?: ButtonHTMLAttributes["type"];
+defineProps<{
+    href?: string;
+    active?: boolean;
 }>();
 </script>
 
 <template>
-    <button :type><slot /></button>
+    <component
+        :is="href ? 'a' : 'button'"
+        :href="href"
+        :type="href ? null : 'button'"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2 hover:-translate-y-1 transition-transform shadow-sm rounded bg-gray-100"
+        :class="{ active: active }"
+    >
+        <slot />
+    </component>
 </template>
 
 <style scoped>
-button {
-    font-family: "Inter", sans-serif;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+.active {
+    border: 2px solid var(--color-primary);
 }
 </style>
