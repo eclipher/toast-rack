@@ -1,2 +1,2 @@
-import { Toaster } from "toast-kit";
-export const toaster = new Toaster();
+import { ToastRack } from "toast-rack";
+export const toaster = new ToastRack();

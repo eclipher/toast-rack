@@ -1,19 +1,33 @@
 {
-    "name": "toast-kit",
-    "version": "0.0.0",
+    "name": "toast-rack",
+    "version": "0.1.0",
+    "author": "eclipher",
+    "license": "MIT",
+    "description": "A lightweight toast notification library built with Vanilla JS.",
+    "keywords": [
+        "toast",
+        "notification",
+        "vanilla",
+        "ui"
+    ],
+    "homepage": "https://toast-rack.vercel.app",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/eclipher/toast-rack"
+    },
     "type": "module",
     "files": [
         "dist"
     ],
-    "main": "./dist/toast-kit.umd.cjs",
-    "module": "./dist/toast-kit.es.js",
+    "main": "./dist/toast-rack.umd.cjs",
+    "module": "./dist/toast-rack.es.js",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/toast-kit.es.js",
-            "require": "./dist/toast-kit.umd.cjs"
+            "import": "./dist/toast-rack.es.js",
+            "require": "./dist/toast-rack.umd.cjs"
         },
-        "./style.css": "./dist/toast-kit.css"
+        "./style.css": "./dist/toast-rack.css"
     },
     "scripts": {
         "dev": "pnpm watch",

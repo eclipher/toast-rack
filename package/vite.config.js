@@ -9,9 +9,9 @@ export default defineConfig({
     build: {
         lib: {
             entry: resolve(__dirname, "src/index.ts"),
-            name: "ToastKit",
+            name: "ToastRack",
             formats: ["es", "umd"],
-            fileName: (format) => `toast-kit.${format}.js`,
+            fileName: (format) => `toast-rack.${format}.js`,
         },
     },
     plugins: [dts()],

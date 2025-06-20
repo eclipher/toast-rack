@@ -28,7 +28,7 @@ type PromiseHandler<T> = {
     finally?: () => void;
 };
 
-export class Toaster {
+export class ToastRack {
     defaultOptions: ToasterOptions = {
         durationMs: 3000,
         dismissible: true,
@@ -51,9 +51,7 @@ export class Toaster {
     }
 
     #createContainer() {
-        const existingContainer = document.getElementById(
-            "toast-kit-container",
-        );
+        const existingContainer = document.getElementById("toast-rack");
         // If the container already exists, use it
         if (existingContainer) {
             console.warn(
@@ -63,7 +61,7 @@ export class Toaster {
         }
         const container = document.createElement("div");
 
-        container.id = "toast-kit-container";
+        container.id = "toast-rack";
         container.popover = "manual";
         document.body.append(container);
         container.showPopover();

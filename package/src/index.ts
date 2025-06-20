@@ -1,2 +1,2 @@
 import "./style.css";
-export { Toaster } from "./core/Toaster";
+export { ToastRack } from "./core/Toaster";

@@ -4,11 +4,11 @@ import CodeBlock from "@/component/code-block.vue";
 import DocSection from "@/component/doc-section.vue";
 
 const code = `// import styles
-import "toast-kit/style.css";
+import "toast-rack/style.css";
 
-// create a single instance of Toaster for the entire app
-import { Toaster } from "toast-kit";
-const toaster = new Toaster();
+// create a single instance of ToastRack for the entire app
+import { ToastRack } from "toast-rack";
+const toaster = new ToastRack();
 
 // import the toaster from anywhere in your app use it to show a toast notification
 toaster.toast("Hello, world!")

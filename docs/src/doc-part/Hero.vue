@@ -25,7 +25,7 @@ function showDemo() {
         <div
             class="flex flex-col t-container items-center justify-center gap-8 text-center text-white"
         >
-            <h2 class="text-2xl font-bold">Toast Kit JS</h2>
+            <h2 class="text-2xl font-bold">Toast Rack</h2>
             <h1 class="text-5xl md:text-7xl font-extrabold text-balance">
                 Beautiful Toast Notifications Built with Vanilla JS
             </h1>
@@ -41,7 +41,7 @@ function showDemo() {
                     Make a Toast
                 </Button>
                 <Button
-                    href="https://github.com/eclipher/toast-kit-js"
+                    href="https://github.com/eclipher/toast-rack-js"
                     class="border-white/20 bg-white/10"
                 >
                     <Github />

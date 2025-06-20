@@ -2,7 +2,7 @@
 import CodeBlock from "@/component/code-block.vue";
 import DocSection from "@/component/doc-section.vue";
 
-const code = `pnpm install toast-kit`;
+const code = `pnpm install toast-rack`;
 </script>
 
 <template>
