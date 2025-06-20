@@ -4,7 +4,7 @@
 
 Beautiful Toast Notifications Built with Vanilla JS
 
-[Website](https://toast-rack-js.vercel.app)
+[Website](https://toast-rack.vercel.app)
 
 </div>
 

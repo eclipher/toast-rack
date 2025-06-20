@@ -41,7 +41,7 @@ function showDemo() {
                     Make a Toast
                 </Button>
                 <Button
-                    href="https://github.com/eclipher/toast-rack-js"
+                    href="https://github.com/eclipher/toast-rack"
                     class="border-white/20 bg-white/10"
                 >
                     <Github />
