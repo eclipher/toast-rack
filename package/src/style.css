@@ -13,21 +13,39 @@
     max-width: 360px;
 
     interpolate-size: allow-keywords;
+    transition: 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition-property: transform, translate;
 
+    --space-to-screen: 20px;
 }
 
 .toast-container.top {
-    top: 20px;
+    /* vertical using `transform`, horizontal using `translate` directly,
+        otherwise they will override each other and we cannot stack `top` and `left` together for example */
+    transform: translateY(var(--space-to-screen));
     flex-direction: column;
 
     --toast-initial-transform: translateY(-100%);
 }
 
 .toast-container.bottom {
-    bottom: 20px;
+    /* bottom doesn't need additional screen-to-space, because it will be handled by the margin-bottom of the individual toast */
+    transform: translateY(calc(100vh - 100%));
     flex-direction: column-reverse;
 
     --toast-initial-transform: translateY(100%);
+}
+
+.toast-container.left {
+    translate: calc(0% + var(--space-to-screen));
+}
+
+.toast-container.center {
+    translate: calc(50vw - 50%);
+}
+
+.toast-container.right {
+    translate: calc(100vw - 100% - var(--space-to-screen));
 }
 
 .toast {
@@ -46,15 +64,6 @@
     height: auto;
 
     margin-bottom: 12px;
-}
-
-.toast-container.left {
-    left: 20px;
-}
-
-.toast-container.center {
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .toast[data-styled="true"] {
