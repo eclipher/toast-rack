@@ -56,12 +56,14 @@
     overflow: hidden;
     /* gap is not animatable in css, so we use margin */
     margin-bottom: 0;
+    filter: blur(10px);
 }
 
 .toast.visible {
     opacity: 1;
     transform: translateY(0);
     height: auto;
+    filter: none;
 
     margin-bottom: 12px;
 }
