@@ -9,9 +9,11 @@
     overflow-clip-margin: 12px;
 
     display: flex;
-    gap: 12px;
     width: 100%;
     max-width: 360px;
+
+    interpolate-size: allow-keywords;
+
 }
 
 .toast-container.top {
@@ -30,19 +32,20 @@
 
 .toast {
     opacity: 0;
-    transition:
-        transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1),
-        opacity 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     transform: var(--toast-initial-transform);
+    height: 0;
+    overflow: hidden;
+    /* gap is not animatable in css, so we use margin */
+    margin-bottom: 0;
 }
 
 .toast.visible {
     opacity: 1;
     transform: translateY(0);
-}
+    height: auto;
 
-.toast-container.right {
-    right: 20px;
+    margin-bottom: 12px;
 }
 
 .toast-container.left {
@@ -61,11 +64,12 @@
 
     background-color: white;
     border-radius: 8px;
-    padding: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-left: 4px solid var(--accent-color);
-    min-height: 1.5rem;
-    transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    &.visible {
+        padding: 16px;
+    }
 
     .toast-icon {
         font-size: 1.75rem;
