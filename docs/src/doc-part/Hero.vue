@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from "@/component/button.vue";
 import { toaster } from "../toaster";
-import { Github } from "lucide-vue-next";
+import { NpmIcon, GitHubIcon } from "vue3-simple-icons";
 
 function showDemo() {
     const promise = new Promise((resolve) => setTimeout(resolve, 1000));
@@ -44,8 +44,15 @@ function showDemo() {
                     href="https://github.com/eclipher/toast-rack"
                     class="border-white/20 bg-white/10"
                 >
-                    <Github />
+                    <GitHubIcon />
                     Github
+                </Button>
+                <Button
+                    href="https://www.npmjs.com/package/toast-rack"
+                    class="border-white/20 bg-white/10"
+                >
+                    <NpmIcon />
+                    NPM
                 </Button>
             </div>
         </div>

@@ -10,6 +10,7 @@ defineProps<{
         :is="href ? 'a' : 'button'"
         :href="href"
         :type="href ? null : 'button'"
+        :target="href ? '_blank' : null"
         class="inline-flex items-center justify-center gap-2 px-4 py-2 hover:-translate-y-1 transition-transform shadow-sm rounded bg-gray-100"
         :class="{ active: active }"
     >
