@@ -1,3 +1,9 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .toast-container {
     /* override popover style */
     inset: unset;
@@ -80,6 +86,7 @@
     --background-color: white;
     --message-color: #333333;
     background-color: var(--background-color);
+    color: var(--message-color);
 
     @media (prefers-color-scheme: dark) {
         --background-color: #333333;
@@ -99,10 +106,6 @@
         color: var(--accent-color);
         font-weight: 600;
         font-size: 1.125rem;
-    }
-
-    .toast-message {
-        color: var(--message-color);
     }
 
     .toast-close {

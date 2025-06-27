@@ -6,3 +6,12 @@ export function resolveValue<T, A = void>(
         ? (valOrFunction as (arg: A) => T)(arg as A)
         : valOrFunction;
 }
+
+export function registerCustomElement(
+    tagName: string,
+    element: CustomElementConstructor,
+): void {
+    if (!customElements.get(tagName)) {
+        customElements.define(tagName, element);
+    }
+}

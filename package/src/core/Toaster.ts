@@ -1,4 +1,5 @@
-import { icons } from "./icons";
+import { Toast } from "../components/toast";
+import { ToastContainer } from "../components/toast-container";
 import type {
     ToasterOptions,
     ToastOptions,
@@ -6,7 +7,7 @@ import type {
     ToastPosition,
     ToastType,
 } from "./types";
-import { resolveValue } from "./utils";
+import { registerCustomElement, resolveValue } from "./utils";
 
 type PromiseHandler<T> = {
     /**
@@ -30,82 +31,52 @@ type PromiseHandler<T> = {
 
 export class ToastRack {
     defaultOptions: ToasterOptions = {
-        durationMs: 3000,
+        durationMs: 5000,
         dismissible: true,
         position: "top-right",
     };
 
-    #container: HTMLDivElement;
+    #container: ToastContainer;
     toastTimeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
 
     constructor(options?: Partial<ToasterOptions>) {
+        registerCustomElement("toast-rack", ToastContainer);
+        registerCustomElement("toast-element", Toast);
+
         this.defaultOptions = { ...this.defaultOptions, ...options };
-        this.#container = this.#createContainer();
-        this.changePosition(this.defaultOptions.position);
+        this.#container = this.#getOrCreateContainer();
     }
 
     count = 0;
     #generateId() {
         this.count++;
-        return `toast-${this.count};`;
+        return `toast-${this.count}`;
     }
 
-    #createContainer() {
-        const existingContainer = document.getElementById("toast-rack");
-        // If the container already exists, use it
+    #getOrCreateContainer() {
+        const existingContainer =
+            document.querySelector<ToastContainer>("toast-rack");
         if (existingContainer) {
             console.warn(
-                "Toaster container already exists. Using the existing one.",
+                "Toast container already exists. Using the existing one.",
             );
-            return existingContainer as HTMLDivElement;
+            return existingContainer;
         }
-        const container = document.createElement("div");
-
-        container.id = "toast-rack";
-        container.popover = "manual";
-        document.body.append(container);
-        container.showPopover();
-
+        const container = new ToastContainer();
+        document.body.appendChild(container);
         return container;
     }
 
     changePosition(position: ToastPosition) {
-        this.#container.className = `toast-container ${position.replace("-", " ")}`;
+        this.#container.changePosition(position);
     }
 
-    #getToast(id: string): HTMLElement | null {
-        return (
-            this.#container.children as HTMLCollectionOf<HTMLElement>
-        ).namedItem(id);
-    }
-
-    /**
-     * Get or create a toast element by id.
-     * If no id is given, or the toast with the given id does not exist, it will create a new one.
-     * @param id - The id of the toast to get or create.
-     * @returns The toast element with a defined id.
-     */
-    #getOrCreateToast(id?: string) {
-        if (id) {
-            const toast = this.#getToast(id);
-            if (toast) {
-                delete toast.dataset.isNew; // Mark as not new
-                return toast;
-            }
-            console.warn(`Toast with id ${id} not found, creating a new one.`);
-        }
-
-        // If no id is provided,
-        // or the toast with the given id does not exist,
-        // create a new one
-        const toast = document.createElement("article");
-        toast.id = this.#generateId();
-        toast.dataset.isNew = "true"; // Mark as new
-        return toast;
+    #getToast(id: string): Toast | null {
+        return this.#container.toasts.namedItem(id);
     }
 
     isEmpty() {
-        return this.#container.children.length === 0;
+        return this.#container.toasts.length === 0;
     }
 
     dismissAll() {
@@ -122,29 +93,23 @@ export class ToastRack {
             message: options.message || "",
         };
 
-        const toast = this.#getOrCreateToast(config.id);
+        let toast: Toast | null = null;
+        const { id: givenId, ...restConfig } = config;
+        if (givenId) {
+            toast = this.#getToast(givenId);
+            if (toast) {
+                toast.update(restConfig);
+            } else {
+                console.warn(
+                    `Toast with id ${givenId} not found, creating a new one.`,
+                );
+            }
+        }
 
-        // Add content to the toast
-        toast.innerHTML = `
-            ${config.type ? `<div class="toast-icon">${icons[config.type]}</div>` : ""}
-            <div class="toast-content">
-                ${config.title ? `<p class="toast-title ${config.classes?.title || ""}">${config.title}</p>` : ""}
-                <p class="toast-message ${config.classes?.message || ""}">${config.message}</p>
-            </div>
-            ${config.dismissible ? `<button class="toast-close ${config.classes?.close || ""}">${icons.close}</button>` : ""}
-        `;
-
-        toast.className = `toast ${config.type || ""} ${config.classes?.toast || ""} `;
-        toast.style.cssText = config.style || "";
-        toast.dataset.styled = config.unstyled ? "false" : "true";
-
-        // Add toast to the container
-        this.#container.append(toast);
-
-        if (toast.dataset.isNew) {
-            setTimeout(() => toast.classList.add("visible"), 0); // Trigger CSS transition
-        } else {
-            toast.classList.add("visible"); // If not new, just add the visible class
+        // If no id is given, or the toast with the given id does not exist, create a new toast.
+        if (!toast) {
+            toast = new Toast({ ...restConfig, id: this.#generateId() });
+            this.#container.appendToast(toast);
         }
 
         // Auto-dismiss functionality
@@ -157,14 +122,7 @@ export class ToastRack {
             );
         }
 
-        // Handle manual closing
-        if (config.dismissible) {
-            const closeButton = toast.querySelector(".toast-close");
-            closeButton!.addEventListener("click", () =>
-                this.dismiss(toast.id),
-            );
-        }
-
+        toast.addEventListener("dismiss", () => this.dismiss(toast.id));
         return toast.id;
     }
 
@@ -172,7 +130,7 @@ export class ToastRack {
     dismiss(toastId: string) {
         const toast = this.#getToast(toastId);
         if (!toast) {
-            console.error("No toast found to dismiss");
+            console.error("No toast found to dismiss with id:", toastId);
             return;
         }
         const timeout = this.toastTimeoutMap.get(toastId);
@@ -181,11 +139,7 @@ export class ToastRack {
             this.toastTimeoutMap.delete(toastId);
         }
 
-        toast.classList.remove("visible");
-        // Remove the element after the animation completes
-        toast.addEventListener("transitionend", () => toast.remove(), {
-            once: true,
-        });
+        toast.removeAfterAnimation();
     }
 
     // public-facing method with `message` as first argument
