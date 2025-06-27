@@ -1,13 +1,12 @@
 @import "tailwindcss";
 
 :root {
-    --primary-color: #4f46e5;
-    --primary-light: #818cf8;
-    --primary-dark: #3730a3;
+    color-scheme: light dark;
 }
 
-@theme inline {
-    --color-primary: var(--primary-color);
+@theme {
+    --color-primary: #635de6;
+    --color-muted-foreground: light-dark(oklch(0.556 0 0), oklch(0.708 0 0));
 }
 
 .t-container {

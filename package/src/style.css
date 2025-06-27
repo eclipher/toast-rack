@@ -73,10 +73,18 @@
     align-items: center;
     gap: 12px;
 
-    background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-left: 4px solid var(--accent-color);
+
+    --background-color: white;
+    --message-color: #333333;
+    background-color: var(--background-color);
+
+    @media (prefers-color-scheme: dark) {
+        --background-color: #333333;
+        --message-color: #f0f0f0;
+    }
 
     &.visible {
         padding: 16px;
@@ -94,7 +102,7 @@
     }
 
     .toast-message {
-        color: #333333;
+        color: var(--message-color);
     }
 
     .toast-close {
@@ -130,7 +138,7 @@
 }
 
 .toast.loading {
-    --accent-color: #000000;
+    --accent-color: var(--message-color);
     & > .toast-icon {
         animation: spin 1s linear infinite;
     }

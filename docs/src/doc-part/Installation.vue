@@ -8,9 +8,9 @@ const code = `pnpm install toast-rack`;
 <template>
     <DocSection>
         <template #heading>Installation</template>
-        <p class="text-sm text-gray-800/80">
+        <template #description class="text-sm text-gray-800/80">
             Why do you need any other package manager, when pnpm exists?
-        </p>
+        </template>
         <CodeBlock :code="code" language="bash" />
     </DocSection>
 </template>

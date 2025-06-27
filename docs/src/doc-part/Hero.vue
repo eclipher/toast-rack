@@ -21,7 +21,7 @@ function showDemo() {
 </script>
 
 <template>
-    <header class="py-14">
+    <header class="py-14 bg-primary">
         <div
             class="flex flex-col t-container items-center justify-center gap-8 text-center text-white"
         >
@@ -35,21 +35,21 @@ function showDemo() {
             </p>
             <div class="flex gap-4 flex-col sm:flex-row">
                 <Button
-                    class="bg-white text-primary font-bold"
+                    class="bg-white dark:bg-white text-primary font-bold"
                     @click="showDemo()"
                 >
                     Make a Toast
                 </Button>
                 <Button
                     href="https://github.com/eclipher/toast-rack"
-                    class="border-white/20 bg-white/10"
+                    class="border-white/20 bg-white/10 dark:bg-white/20"
                 >
                     <GitHubIcon />
                     Github
                 </Button>
                 <Button
                     href="https://www.npmjs.com/package/toast-rack"
-                    class="border-white/20 bg-white/10"
+                    class="border-white/20 bg-white/10 dark:bg-white/20"
                 >
                     <NpmIcon />
                     NPM
@@ -58,13 +58,3 @@ function showDemo() {
         </div>
     </header>
 </template>
-
-<style scoped>
-header {
-    background: linear-gradient(
-        135deg,
-        var(--primary-color),
-        var(--primary-dark)
-    );
-}
-</style>

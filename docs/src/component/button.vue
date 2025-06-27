@@ -1,7 +1,14 @@
 <script setup lang="ts">
-defineProps<{
+import { cn } from "@/utils";
+
+const {
+    href,
+    active,
+    class: className,
+} = defineProps<{
     href?: string;
     active?: boolean;
+    class?: string;
 }>();
 </script>
 
@@ -11,8 +18,13 @@ defineProps<{
         :href="href"
         :type="href ? null : 'button'"
         :target="href ? '_blank' : null"
-        class="inline-flex items-center justify-center gap-2 px-4 py-2 hover:-translate-y-1 transition-transform shadow-sm rounded bg-gray-100"
-        :class="{ active: active }"
+        :class="
+            cn(
+                'inline-flex items-center justify-center gap-2 px-4 py-2 hover:-translate-y-1 transition-transform shadow-sm rounded dark:bg-gray-700 bg-gray-100',
+                className,
+                active ? 'active' : '',
+            )
+        "
     >
         <slot />
     </component>
