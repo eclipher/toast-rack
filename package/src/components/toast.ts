@@ -9,9 +9,8 @@ export class Toast extends HTMLElement {
     }
 
     render() {
-        const { type, title, message, dismissible, classes, unstyled, id } =
-            this.config;
-        this.className = `toast ${type || ""} ${classes?.toast || ""} `;
+        const { type, title, message, dismissible, unstyled, id } = this.config;
+        this.className = `toast ${type || ""}`;
         this.dataset.styled = unstyled ? "false" : "true";
         this.style.cssText = this.config.style || "";
 
@@ -20,8 +19,8 @@ export class Toast extends HTMLElement {
         this.innerHTML = String.raw`
             ${type ? `<div class="toast-icon">${typeIcons[type]}</div>` : ""}
             <div class="toast-content">
-                ${title ? `<p class="toast-title ${classes?.title || ""}">${title}</p>` : ""}
-                <p class="toast-message ${classes?.message || ""}">${message}</p>
+                ${title ? `<p class="toast-title">${title}</p>` : ""}
+                <p class="toast-message">${message}</p>
             </div>
         `;
         if (dismissible) this.append(this.dismissButton);

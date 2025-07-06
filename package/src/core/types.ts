@@ -15,12 +15,6 @@ export interface ToastOptions {
     durationMs: number;
     dismissible: boolean;
     unstyled?: boolean;
-    classes?: {
-        toast?: string;
-        title?: string;
-        message?: string;
-        close?: string;
-    };
     style?: string;
 }
 
