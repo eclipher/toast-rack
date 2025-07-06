@@ -147,8 +147,18 @@ export class Toaster {
     }
 
     // public-facing method with `message` as first argument
-    toast(message: ToastMessage, options: Partial<ToastOptions> = {}) {
+    toast(message: string, options: Partial<ToastOptions> = {}) {
         return this.#createToast({ ...options, message });
+    }
+
+    /**
+     * Show a custom toast notification. This method will disable the default styling and allow you to fully customize the toast's appearance.
+     * @param message - The message to display in the toast. Can be a string or an HTMLElement.
+     * @param options - Additional options for the toast.
+     * @returns The ID of the created toast.
+     */
+    custom(message: ToastMessage, options: Partial<ToastOptions> = {}) {
+        return this.#createToast({ ...options, message, unstyled: true });
     }
 
     #createWithType(

@@ -35,33 +35,66 @@ toaster.promise(promise, {
 `,
     },
     {
-        label: "Single Toast Customization",
+        label: "Headless Custom Toast",
         action: () => {
-            toaster.toast("Customize to your heart's content", {
-                title: "Fancy Toast",
-                unstyled: true, // Disable default styles
-                style: `background: linear-gradient(to right, rgb(255, 95, 109), rgb(255, 195, 113));`, // inline styles
-                classes: {
-                    // tailwind classes
-                    toast: "rounded-none flex text-white items-center gap-2 px-6 py-4 text-white",
-                    title: "font-bold text-2xl uppercase font-serif",
-                    message: "font-serif",
-                    close: "text-white/50 hover:text-white ",
-                },
-            });
+            const message = document.createElement("template");
+            message.innerHTML = String.raw`
+              <div
+                class="max-w-md w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black/5"
+              >
+                <div class="flex-1 w-0 p-4">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0 pt-0.5">
+                      <img
+                        class="h-10 w-10 rounded-full"
+                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                        alt=""
+                      />
+                    </div>
+                    <div class="ml-3 flex-1">
+                      <p class="text-sm font-medium">
+                        Emilia Gates
+                      </p>
+                      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                        Sure! 8:30pm works great!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              `;
+
+            toaster.custom(message.content.firstElementChild as HTMLElement);
         },
-        snippet: `toaster.toast("Customize to your heart's content", {
-    title: "Fancy Toast",
-    unstyled: true, // Disable default styles
-    style: \`background: linear-gradient(to right, rgb(255, 95, 109), rgb(255, 195, 113));\`, // inline styles
-    classes: {
-        // tailwind classes (or your own CSS classes)
-        toast: "rounded-none flex text-white items-center gap-2 px-6 py-4 text-white",
-        title: "font-bold text-2xl uppercase font-serif",
-        message: "font-serif",
-        close: "text-white/50 hover:text-white ",
-    },
-});`,
+        snippet: `// Shamelessly copied from react-hot-toast TailwindCSS example
+const message = document.createElement("template");
+message.innerHTML = String.raw\`
+    <div
+    class="max-w-md w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black/5"
+    >
+    <div class="flex-1 w-0 p-4">
+        <div class="flex items-start">
+        <div class="flex-shrink-0 pt-0.5">
+            <img
+            class="h-10 w-10 rounded-full"
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+            alt=""
+            />
+        </div>
+        <div class="ml-3 flex-1">
+            <p class="text-sm font-medium">
+            Emilia Gates
+            </p>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+            Sure! 8:30pm works great!
+            </p>
+        </div>
+        </div>
+    </div>
+    </div>
+\`;
+
+toaster.custom(message.content.firstElementChild as HTMLElement);`,
     },
     {
         label: "Global Customization",
@@ -101,6 +134,13 @@ setTimeout(
     2500,
 );
 `,
+    },
+    {
+        label: "Dismiss All",
+        action: () => {
+            toaster.dismissAll();
+        },
+        snippet: `toaster.dismissAll();`,
     },
 ];
 
