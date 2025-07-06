@@ -2,7 +2,12 @@ import type { ToastPosition } from "../core/types";
 import styles from "./style.css?inline";
 import type { Toast } from "./toast";
 
-export class ToastContainer extends HTMLElement {
+/**
+ * This custom element `<toast-rack>` contains a shadow root and optionally other elements.
+ * - The regular toasts reside in a container `<div>` inside the shadow root. they should be added using the `appendToast` method.
+ * - The custom toasts should be directly appended to the `<toast-rack>` element with a slot attribute (via `append` method), and they will be displayed in the same container. This is so that the custom toasts can be styled by the user's CSS.
+ */
+export class ToastRack extends HTMLElement {
     #container: HTMLDivElement;
     constructor(position: ToastPosition = "top-right") {
         super();
@@ -11,7 +16,10 @@ export class ToastContainer extends HTMLElement {
     }
 
     connectedCallback() {
-        const shadow = this.attachShadow({ mode: "open" });
+        const shadow = this.attachShadow({
+            mode: "open",
+            slotAssignment: "manual",
+        });
         const styleEl = document.createElement("style");
         styleEl.textContent = styles;
         shadow.append(styleEl);

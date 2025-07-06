@@ -70,6 +70,7 @@
     transform: translateY(0);
     height: auto;
     filter: none;
+    overflow: visible;
 
     margin-bottom: 12px;
 }

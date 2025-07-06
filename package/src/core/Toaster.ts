@@ -1,7 +1,8 @@
 import { Toast } from "../components/toast";
-import { ToastContainer } from "../components/toast-container";
+import { ToastRack } from "../components/toast-container";
 import type {
     ToasterOptions,
+    ToastMessage,
     ToastOptions,
     ToastOptionsFull,
     ToastPosition,
@@ -29,18 +30,18 @@ type PromiseHandler<T> = {
     finally?: () => void;
 };
 
-export class ToastRack {
+export class Toaster {
     defaultOptions: ToasterOptions = {
         durationMs: 5000,
         dismissible: true,
         position: "top-right",
     };
 
-    #container: ToastContainer;
+    #container: ToastRack;
     toastTimeoutMap = new Map<string, ReturnType<typeof setTimeout>>();
 
     constructor(options?: Partial<ToasterOptions>) {
-        registerCustomElement("toast-rack", ToastContainer);
+        registerCustomElement("toast-rack", ToastRack);
         registerCustomElement("toast-element", Toast);
 
         this.defaultOptions = { ...this.defaultOptions, ...options };
@@ -55,15 +56,15 @@ export class ToastRack {
 
     #getOrCreateContainer() {
         const existingContainer =
-            document.querySelector<ToastContainer>("toast-rack");
+            document.querySelector<ToastRack>("toast-rack");
         if (existingContainer) {
             console.warn(
                 "Toast container already exists. Using the existing one.",
             );
             return existingContainer;
         }
-        const container = new ToastContainer();
-        document.body.appendChild(container);
+        const container = new ToastRack();
+        document.body.append(container);
         return container;
     }
 
@@ -108,7 +109,10 @@ export class ToastRack {
 
         // If no id is given, or the toast with the given id does not exist, create a new toast.
         if (!toast) {
-            toast = new Toast({ ...restConfig, id: this.#generateId() });
+            toast = new Toast(
+                { ...restConfig, id: this.#generateId() },
+                this.#container,
+            );
             this.#container.appendToast(toast);
         }
 
@@ -143,7 +147,7 @@ export class ToastRack {
     }
 
     // public-facing method with `message` as first argument
-    toast(message: string, options: Partial<ToastOptions> = {}) {
+    toast(message: ToastMessage, options: Partial<ToastOptions> = {}) {
         return this.#createToast({ ...options, message });
     }
 

@@ -8,6 +8,8 @@ export type ToastPosition =
 
 export type ToastType = "info" | "success" | "error" | "warning" | "loading";
 
+export type ToastMessage = string | HTMLElement;
+
 // public facing
 export interface ToastOptions {
     id?: string;
@@ -19,7 +21,7 @@ export interface ToastOptions {
 }
 
 export interface ToastOptionsFull extends ToastOptions {
-    message: string;
+    message: ToastMessage;
     type?: ToastType;
 }
 

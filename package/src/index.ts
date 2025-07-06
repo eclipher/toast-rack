@@ -1,1 +1,1 @@
-export { ToastRack } from "./core/Toaster";
+export { Toaster as ToastRack } from "./core/Toaster";

@@ -1,11 +1,15 @@
 import { closeIcon, typeIcons } from "../core/icons";
 import type { ToastOptionsFull } from "../core/types";
+import type { ToastRack } from "./toast-container";
 
 export class Toast extends HTMLElement {
     config: ToastOptionsFull;
-    constructor(config: ToastOptionsFull) {
+    rack: ToastRack;
+
+    constructor(config: ToastOptionsFull, rack: ToastRack) {
         super();
         this.config = config;
+        this.rack = rack;
     }
 
     render() {
@@ -16,6 +20,12 @@ export class Toast extends HTMLElement {
 
         if (id) this.id = id;
 
+        if (message instanceof HTMLElement) {
+            const slot = document.createElement("slot");
+            this.append(slot);
+            this.rack.append(message);
+            slot.assign(message);
+        } else if (typeof message === "string") {
         this.innerHTML = String.raw`
             ${type ? `<div class="toast-icon">${typeIcons[type]}</div>` : ""}
             <div class="toast-content">
@@ -24,6 +34,7 @@ export class Toast extends HTMLElement {
             </div>
         `;
         if (dismissible) this.append(this.dismissButton);
+    }
     }
 
     // Lifecycle method called when the element is added to the DOM
