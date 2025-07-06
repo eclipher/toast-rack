@@ -126,7 +126,11 @@ export class Toaster {
             );
         }
 
-        toast.addEventListener("dismiss", () => this.dismiss(toast.id));
+        toast.addEventListener("click", (e) => {
+            if ((e.target as HTMLElement).closest("[data-action='dismiss']")) {
+                this.dismiss(toast.id);
+            }
+        });
         return toast.id;
     }
 

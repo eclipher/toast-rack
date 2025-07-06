@@ -39,59 +39,68 @@ toaster.promise(promise, {
         action: () => {
             const message = document.createElement("template");
             message.innerHTML = String.raw`
-              <div
-                class="max-w-md w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black/5"
-              >
-                <div class="flex-1 w-0 p-4">
-                  <div class="flex items-start">
-                    <div class="flex-shrink-0 pt-0.5">
-                      <img
-                        class="h-10 w-10 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                        alt=""
-                      />
-                    </div>
-                    <div class="ml-3 flex-1">
-                      <p class="text-sm font-medium">
-                        Emilia Gates
-                      </p>
-                      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
-                        Sure! 8:30pm works great!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              `;
+<div class="max-w-md w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black/5">
+    <div class="flex-1 w-0 p-4">
+        <div class="flex items-start">
+            <div class="flex-shrink-0 pt-0.5">
+                <img
+                    class="h-10 w-10 rounded-full"
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                    alt=""
+                />
+            </div>
+            <div class="ml-3 flex-1">
+                <p class="text-sm font-medium">Emilia Gates</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                    Sure! 8:30pm works great!
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="flex border-l border-gray-200 dark:border-gray-500">
+        <button
+            data-action="dismiss"
+            class="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-indigo-400 hover:dark:text-indigo-300"
+        >
+            Close
+        </button>
+    </div>
+</div>
+`;
 
             toaster.custom(message.content.firstElementChild as HTMLElement);
         },
         snippet: `// Shamelessly copied from react-hot-toast TailwindCSS example
 const message = document.createElement("template");
 message.innerHTML = String.raw\`
-    <div
-    class="max-w-md w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black/5"
-    >
+<div class="max-w-md w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black/5">
     <div class="flex-1 w-0 p-4">
         <div class="flex items-start">
-        <div class="flex-shrink-0 pt-0.5">
-            <img
-            class="h-10 w-10 rounded-full"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-            alt=""
-            />
-        </div>
-        <div class="ml-3 flex-1">
-            <p class="text-sm font-medium">
-            Emilia Gates
-            </p>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
-            Sure! 8:30pm works great!
-            </p>
-        </div>
+            <div class="flex-shrink-0 pt-0.5">
+                <img
+                    class="h-10 w-10 rounded-full"
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                    alt=""
+                />
+            </div>
+            <div class="ml-3 flex-1">
+                <p class="text-sm font-medium">Emilia Gates</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                    Sure! 8:30pm works great!
+                </p>
+            </div>
         </div>
     </div>
+    <div class="flex border-l border-gray-200 dark:border-gray-500">
+        <!-- add \`data-action="dismiss"\` to the button in order to close the toast -->
+        <button
+            data-action="dismiss"
+            class="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-indigo-400 hover:dark:text-indigo-300"
+        >
+            Close
+        </button>
     </div>
+</div>
 \`;
 
 toaster.custom(message.content.firstElementChild as HTMLElement);`,

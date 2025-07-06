@@ -26,15 +26,15 @@ export class Toast extends HTMLElement {
             this.rack.append(message);
             slot.assign(message);
         } else if (typeof message === "string") {
-        this.innerHTML = String.raw`
+            this.innerHTML = String.raw`
             ${type ? `<div class="toast-icon">${typeIcons[type]}</div>` : ""}
             <div class="toast-content">
                 ${title ? `<p class="toast-title">${title}</p>` : ""}
                 <p class="toast-message">${message}</p>
             </div>
-        `;
-        if (dismissible) this.append(this.dismissButton);
-    }
+            `;
+            if (dismissible) this.append(this.dismissButton);
+        }
     }
 
     // Lifecycle method called when the element is added to the DOM
@@ -60,18 +60,10 @@ export class Toast extends HTMLElement {
     }
 
     get dismissButton() {
-        const button = document.createElement("button");
-        button.className = "toast-close";
-        button.ariaLabel = "Close toast";
-        button.innerHTML = closeIcon;
-        button.addEventListener("click", () =>
-            this.dispatchEvent(
-                new CustomEvent("dismiss", {
-                    bubbles: true,
-                    composed: true,
-                }),
-            ),
-        );
+        const buttonTemplate = document.createElement("template");
+        buttonTemplate.innerHTML = String.raw`<button class="toast-close" aria-label="Close toast" type="button" data-action="dismiss">${closeIcon}</button>`;
+        const button = buttonTemplate.content
+            .firstElementChild as HTMLButtonElement;
         return button;
     }
 }
