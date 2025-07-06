@@ -16,13 +16,13 @@ export interface ToastOptions {
     title?: string;
     durationMs: number;
     dismissible: boolean;
-    unstyled?: boolean;
     style?: string;
 }
 
 export interface ToastOptionsFull extends ToastOptions {
     message: ToastMessage;
     type?: ToastType;
+    unstyled?: boolean;
 }
 
 export interface ToasterOptions extends Omit<ToastOptions, "id"> {
