@@ -76,7 +76,7 @@ export class Toaster {
         return this.#container.toasts.namedItem(id);
     }
 
-    isEmpty() {
+    get isEmpty() {
         return this.#container.toasts.length === 0;
     }
 
