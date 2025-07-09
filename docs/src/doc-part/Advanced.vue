@@ -106,7 +106,7 @@ message.innerHTML = String.raw\`
 toaster.custom(message.content.firstElementChild as HTMLElement);`,
     },
     {
-        label: "Global Customization",
+        label: "Global Configuration",
         action: () => {
             toaster.toast(
                 "All toasts in this app will be super long and user cannot dismiss them",
@@ -117,11 +117,12 @@ toaster.custom(message.content.firstElementChild as HTMLElement);`,
                 },
             );
         },
-        snippet: `const toaster = new Toaster("All toasts in this app will be super long and user cannot dismiss them", {
+        snippet: `const toaster = new Toaster({
     title: "Awesome App",
     durationMs: 10000,
     dismissible: false,
 });
+toaster.toast("All toasts in this app will be super long and user cannot dismiss them")
 `,
     },
     {

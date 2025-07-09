@@ -3,14 +3,11 @@ import Button from "@/component/button.vue";
 import CodeBlock from "@/component/code-block.vue";
 import DocSection from "@/component/doc-section.vue";
 
-const code = `// import styles
-import "toast-rack/style.css";
-
-// create a single instance of ToastRack for the entire app
+const code = `// create a single instance of ToastRack for the entire app
 import { ToastRack } from "toast-rack";
 const toaster = new ToastRack();
 
-// import the toaster from anywhere in your app use it to show a toast notification
+// import the toaster from anywhere in your app, and use it to show a toast
 toaster.toast("Hello, world!")
 `;
 import { toaster } from "@/toaster";

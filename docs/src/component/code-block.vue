@@ -28,7 +28,7 @@ watchEffect(() => {
 <template>
     <div class="my-4">
         <div
-            class="*:rounded-lg *:p-4 *:text-wrap"
+            class="*:rounded-lg *:p-4 *:text-wrap *:max-h-[650px] *:overflow-auto"
             v-html="highlightedCode"
         ></div>
 

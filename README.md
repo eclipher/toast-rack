@@ -21,9 +21,6 @@ pnpm i toast-rack
 ```
 
 ```ts
-// import styles
-import "toast-rack/style.css";
-
 // create a single instance of Toaster for the entire app
 import { Toaster } from "toast-rack";
 const toaster = new Toaster();

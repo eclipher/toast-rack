@@ -5,8 +5,9 @@ import {
     Blocks,
     Feather,
     Move,
-    Hammer,
+    PaintbrushVertical,
     Workflow,
+    Layers2,
 } from "lucide-vue-next";
 
 const features: { label: string; description: string; icon: typeof Feather }[] =
@@ -29,21 +30,22 @@ const features: { label: string; description: string; icon: typeof Feather }[] =
             icon: Workflow,
         },
         {
-            label: "Poor Compatibility",
+            label: "Popover API",
             description:
-                "It uses <a href='https://caniuse.com/mdn-api_htmlelement_showpopover' target='_blank' class='inline-anchor'>Popover API</a>, meaning it won't work on browsers older than 2024.",
+                "Thanks to the <a href='https://caniuse.com/mdn-api_htmlelement_showpopover' target='_blank' class='inline-anchor'>Popover API</a>, your toasts always appear on top. It does require a modern browser though (2024 or newer).",
             icon: Blend,
         },
         {
-            label: "Janky Animations",
-            description: "The toasts look good... when they are not moving. ",
-            icon: Move,
+            label: "Shadow DOM",
+            description:
+                "The toasts are rendered in a shadow DOM, so they won't ever interfere with your styles.",
+            icon: Layers2,
         },
         {
-            label: "It just works",
+            label: "Customizable",
             description:
-                "I made this for myself and it works. What more do you want?",
-            icon: Hammer,
+                "Beautiful by default, but you can customize the styles to your liking.",
+            icon: PaintbrushVertical,
         },
     ];
 </script>
@@ -64,6 +66,6 @@ const features: { label: string; description: string; icon: typeof Feather }[] =
 
 <style>
 .inline-anchor {
-    color: var(--primary-color);
+    color: var(--color-primary);
 }
 </style>
