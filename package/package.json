@@ -1,6 +1,6 @@
 {
     "name": "toast-rack",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "author": "eclipher",
     "license": "MIT",
     "description": "A lightweight toast notification library built with Vanilla JS.",
