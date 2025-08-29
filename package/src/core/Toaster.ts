@@ -45,7 +45,9 @@ export class Toaster {
         registerCustomElement("toast-element", Toast);
 
         this.defaultOptions = { ...this.defaultOptions, ...options };
-        this.#container = this.#getOrCreateContainer();
+        this.#container = this.#getOrCreateContainer(
+            this.defaultOptions.position,
+        );
     }
 
     count = 0;
@@ -54,7 +56,7 @@ export class Toaster {
         return `toast-${this.count}`;
     }
 
-    #getOrCreateContainer() {
+    #getOrCreateContainer(position?: ToastPosition) {
         const existingContainer =
             document.querySelector<ToastRack>("toast-rack");
         if (existingContainer) {
@@ -63,7 +65,7 @@ export class Toaster {
             );
             return existingContainer;
         }
-        const container = new ToastRack();
+        const container = new ToastRack(position);
         document.body.append(container);
         return container;
     }
