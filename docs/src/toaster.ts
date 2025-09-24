@@ -1,2 +1,4 @@
-import { ToastRack } from "toast-rack";
+import { mountToaster, ToastRack } from "toast-rack";
 export const toaster = new ToastRack();
+
+mountToaster();

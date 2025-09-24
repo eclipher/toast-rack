@@ -1,3 +1,3 @@
 export { Toaster as ToastRack } from "./core/Toaster";
 
-export { toast } from "./core-lit/toaster";
+export { toast, mountToaster } from "./core-lit/toaster";

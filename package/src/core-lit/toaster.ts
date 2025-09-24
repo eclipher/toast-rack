@@ -1,7 +1,8 @@
-import { Toast } from "../components-lit/toast";
 import { ToastContainer } from "../components-lit/toast-container";
+import type { ToasterOptions } from "../core/types";
+import { toasts } from "./store";
 
-function getOrCreateContainer() {
+export function mountToaster(options?: ToasterOptions) {
     const existingContainer =
         document.querySelector<ToastContainer>("toast-rack-lit");
     if (existingContainer) {
@@ -10,16 +11,14 @@ function getOrCreateContainer() {
         );
         return existingContainer;
     }
+
     const container = new ToastContainer();
+    if (options?.position) container.position = options.position;
     document.body.append(container);
 
     return container;
 }
 
-const container = getOrCreateContainer();
 export function toast(message: string) {
-    const toast = new Toast();
-    toast.message = message;
-
-    container.addToast(toast);
+    toasts.value = [...toasts.value, message];
 }

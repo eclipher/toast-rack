@@ -1,24 +1,23 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { createRef, ref, type Ref } from "lit/directives/ref.js";
 
 import type { ToastPosition } from "../core/types";
-import type { Toast } from "./toast";
+import { SignalWatcher } from "@lit-labs/preact-signals";
+import { toasts } from "../core-lit/store";
+
+import "./toast";
 
 @customElement("toast-rack-lit")
-export class ToastContainer extends LitElement {
+export class ToastContainer extends SignalWatcher(LitElement) {
     @property({ type: String })
     position: ToastPosition = "top-right";
 
-    @state()
-    private toasts: Toast[] = [];
-
-    addToast(toast: Toast) {
-        this.toasts = [...this.toasts, toast];
-    }
-
     containerRef: Ref<HTMLDivElement> = createRef();
+    firstUpdated(): void {
+        this.containerRef.value?.showPopover();
+    }
 
     render() {
         const positionClasses = this.position.replace("-", " ");
@@ -29,15 +28,11 @@ export class ToastContainer extends LitElement {
             ${ref(this.containerRef)}
         >
             ${repeat(
-                this.toasts,
-                (toast) => toast.id,
-                (toast) => html`${toast}`,
+                toasts.value,
+                (toast) => toast,
+                (toast) => html`<toast-lit .message=${toast}></toast-lit>`,
             )}
         </div>`;
-    }
-
-    firstUpdated(): void {
-        this.containerRef.value?.showPopover();
     }
 
     static styles = css`
