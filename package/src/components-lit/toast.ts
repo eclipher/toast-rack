@@ -2,37 +2,33 @@ import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { createRef, ref } from "lit/directives/ref.js";
 import { unsafeSVG } from "lit/directives/unsafe-svg.js";
-import { styleMap, type StyleInfo } from "lit/directives/style-map.js";
+import { styleMap } from "lit/directives/style-map.js";
+import type { ToastDataFull } from "../core-lit/toaster";
 
 @customElement("toast-el")
 export class Toast extends LitElement {
-    @property({ type: String })
-    icon = "";
-
-    @property({ type: String })
-    title = "";
-
-    @property({ type: String })
-    message = "";
-
-    @property({ type: Object })
-    styles?: StyleInfo = {};
+    @property({ attribute: false })
+    data: Omit<ToastDataFull, "id"> = {
+        message: "",
+    };
 
     toastRef = createRef<HTMLElement>();
 
     render() {
         return html`<article
             class="toast"
-            style=${this.styles ? styleMap(this.styles) : ""}
+            style=${this.data.style ? styleMap(this.data.style) : ""}
             ${ref(this.toastRef)}
             data-styled="true"
         >
-            ${this.icon
-                ? html`<span class="toast-icon">${unsafeSVG(this.icon)}</span>`
+            ${this.data.icon
+                ? html`<span class="toast-icon"
+                      >${unsafeSVG(this.data.icon)}</span
+                  >`
                 : ""}
             <div class="toast-content">
-                <p class="toast-title">${this.title}</p>
-                <p class="toast-message">${this.message}</p>
+                <p class="toast-title">${this.data.title}</p>
+                <p class="toast-message">${this.data.message}</p>
             </div>
         </article>`;
     }
