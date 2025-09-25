@@ -2,7 +2,7 @@ import type { StyleInfo } from "lit/directives/style-map.js";
 import { ToastContainer } from "../components-lit/toast-container";
 import type { ToasterOptions } from "../core/types";
 import { generateId } from "../utils-lit/generate-id";
-import { toasts } from "./store";
+import { addToast, findToast, updateToast } from "./store";
 
 export function mountToaster(options?: ToasterOptions) {
     const existingContainer =
@@ -36,8 +36,22 @@ export interface ToastDataFull extends ToastData {
 }
 
 export function dispatchToast(message: string, options?: ToastData) {
-    const toast = { ...options, id: options?.id ?? generateId(), message };
-    toasts.value = [...toasts.value, toast];
+    if (options?.id) {
+        if (findToast(options.id)) {
+            updateToast(options.id, { ...options, message });
+            return options.id;
+        } else {
+            console.warn(
+                `Toast with id ${options.id} not found, creating a new one.`,
+            );
+        }
+    }
+    const toast: ToastDataFull = {
+        ...options,
+        id: options?.id ?? generateId(),
+        message,
+    };
+    addToast(toast);
     return toast.id;
 }
 

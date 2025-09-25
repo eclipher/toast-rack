@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { toaster } from "../toaster";
+import { toasterLit } from "../toaster";
+import { toast } from "toast-rack";
 import Button from "../component/button.vue";
 import ButtonGroup from "../component/button-group.vue";
 import { computed, ref } from "vue";
@@ -15,11 +16,10 @@ const positions = [
     { value: "bottom-right", label: "Bottom Right" },
 ] as const;
 
-const toastId = ref("0");
+const TOAST_ID = "position-toast";
 const selectedPosition = ref("top-right");
-
 const code = computed(() => {
-    return `const toaster = new Toast({ position: '${selectedPosition.value}' });`;
+    return `mountToaster({ position: '${selectedPosition.value}' });`;
 });
 </script>
 
@@ -38,11 +38,13 @@ const code = computed(() => {
                 @click="
                     {
                         selectedPosition = position.value;
-                        toastId = toaster.toast(
+                        toast(
                             `I\'m here now on the ${position.label} position!`,
-                            { id: toastId },
+                            {
+                                id: TOAST_ID,
+                            },
                         );
-                        toaster.changePosition(position.value);
+                        toasterLit.position = position.value;
                     }
                 "
                 :class="{ active: selectedPosition === position.value }"

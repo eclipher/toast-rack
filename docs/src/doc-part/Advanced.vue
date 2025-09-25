@@ -5,6 +5,7 @@ import ButtonGroup from "../component/button-group.vue";
 import DocSection from "@/component/doc-section.vue";
 import CodeBlock from "@/component/code-block.vue";
 import { ref } from "vue";
+import { toast } from "toast-rack";
 
 const advancedUsages: {
     label: string;
@@ -128,19 +129,19 @@ toaster.toast("All toasts in this app will be super long and user cannot dismiss
     {
         label: "Update a Toast",
         action: () => {
-            const id = toaster.info(
+            const id = toast.info(
                 "You can update a toast after it has been shown by passing the same ID.",
             );
             setTimeout(
-                () => toaster.success("This toast has been updated", { id }),
+                () => toast.success("This toast has been updated", { id }),
                 2500,
             );
         },
-        snippet: `const id = toaster.info(
+        snippet: `const id = toast.info(
     "You can update a toast after it has been shown by passing the same ID.",
 );
 setTimeout(
-    () => toaster.success("This toast has been updated", { id }),
+    () => toast.success("This toast has been updated", { id }),
     2500,
 );
 `,
