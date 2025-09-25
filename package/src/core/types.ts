@@ -6,7 +6,7 @@ export type ToastPosition =
     | "bottom-center"
     | "bottom-right";
 
-export type ToastType = "info" | "success" | "error" | "warning" | "loading";
+export type ToastType = "Info" | "Success" | "Error" | "Warning" | "Loading";
 
 export type ToastMessage = string | HTMLElement;
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toaster } from "../toaster";
+import { toast } from "toast-rack";
 import Button from "../component/button.vue";
 import ButtonGroup from "../component/button-group.vue";
 import DocSection from "@/component/doc-section.vue";
@@ -23,41 +23,39 @@ const types: {
         label: "Success",
         icon: CircleCheck,
         action: () => {
-            toaster.success("Your profile has been updated successfully.");
+            toast.success("Your profile has been updated successfully.");
         },
-        snippet: `toaster.success("Your profile has been updated successfully.");`,
+        snippet: `toast.success("Your profile has been updated successfully.");`,
     },
     {
         label: "Error",
         icon: CircleX,
         action: () => {
-            toaster.error("Failed to upload the file. Please try again.");
+            toast.error("Failed to upload the file. Please try again.");
         },
-        snippet: `toaster.error("Failed to upload the file. Please try again.");`,
+        snippet: `toast.error("Failed to upload the file. Please try again.");`,
     },
     {
         label: "Info",
         icon: Info,
         action: () => {
-            toaster.info("You can customize the duration of this toast.", {
+            toast.info("You can customize the duration of this toast.", {
                 title: "Did you know?",
-                durationMs: 3000,
             });
         },
-        snippet: `toaster.info("You can customize the duration of this toast.", {
-    title: "Did you know?",
-    durationMs: 3000,
+        snippet: `toast.info("You can customize the duration of this toast.", {
+    title: "Did you know?"
 });`,
     },
     {
         label: "Warning",
         icon: CircleAlert,
         action: () => {
-            toaster.warning("Your session will expire in 2 minutes.", {
+            toast.warning("Your session will expire in 2 minutes.", {
                 title: "Session Expiring",
             });
         },
-        snippet: `toaster.warning("Your session will expire in 2 minutes.", {
+        snippet: `toast.warning("Your session will expire in 2 minutes.", {
     title: "Session Expiring",
 });`,
     },
@@ -65,13 +63,9 @@ const types: {
         label: "Loading",
         icon: LoaderCircle,
         action: () => {
-            toaster.loading("This toast is loading indefinitely.", {
-                dismissible: true,
-            });
+            toast.loading("Submitting your data...");
         },
-        snippet: `toaster.loading("This toast is loading indefinitely.", {
-    dismissible: true,
-});`,
+        snippet: `toast.loading("Submitting your data...");`,
     },
 ];
 

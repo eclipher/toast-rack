@@ -1,4 +1,4 @@
-import { closeIcon, typeIcons } from "../core/icons";
+import { closeIcon } from "../core/icons";
 import type { ToastOptionsFull } from "../core/types";
 import type { ToastRack } from "./toast-container";
 
@@ -27,7 +27,6 @@ export class Toast extends HTMLElement {
             slot.assign(message);
         } else if (typeof message === "string") {
             this.innerHTML = String.raw`
-            ${type ? `<div class="toast-icon">${typeIcons[type]}</div>` : ""}
             <div class="toast-content">
                 ${title ? `<p class="toast-title">${title}</p>` : ""}
                 <p class="toast-message">${message}</p>

@@ -29,8 +29,16 @@ export class ToastContainer extends SignalWatcher(LitElement) {
         >
             ${repeat(
                 toasts.value,
-                (toast) => toast,
-                (toast) => html`<toast-lit .message=${toast}></toast-lit>`,
+                (toast) => toast.id,
+                (toast) =>
+                    html`<toast-el
+                        id=${toast.id}
+                        .icon=${toast.icon || ""}
+                        .message=${toast.message}
+                        .title=${toast.title || ""}
+                        .styles=${toast.style}
+                    >
+                    </toast-el>`,
             )}
         </div>`;
     }

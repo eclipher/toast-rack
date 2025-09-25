@@ -167,48 +167,6 @@ export class Toaster {
         return this.#createToast({ ...options, message, unstyled: true });
     }
 
-    #createWithType(
-        type: ToastType,
-        options: Partial<Omit<ToastOptionsFull, "type">>,
-    ) {
-        return this.#createToast({
-            ...options,
-            type: type,
-            title:
-                options.title ??
-                this.defaultOptions.title ??
-                type[0].toUpperCase() + type.slice(1),
-        });
-    }
-
-    success(message: string, options?: Partial<ToastOptions>) {
-        return this.#createWithType("success", { ...options, message });
-    }
-
-    error(message: string, options?: Partial<ToastOptions>) {
-        return this.#createWithType("error", { ...options, message });
-    }
-
-    info(message: string, options?: Partial<ToastOptions>) {
-        return this.#createWithType("info", { ...options, message });
-    }
-
-    warning(message: string, options?: Partial<ToastOptions>) {
-        return this.#createWithType("warning", { ...options, message });
-    }
-
-    /** Render a toast of "loading" type. By default, this kind of toast will stay on screen forever and cannot be dismissed by user. You can either:
-     * - Programmatically remove it via `toaster.remove()`.
-     * - Or explicitly pass `dismissible` and `duration` to override the default option.  */
-    loading(message: string, options?: Partial<ToastOptions>) {
-        return this.#createWithType("loading", {
-            durationMs: Infinity,
-            dismissible: false,
-            ...options,
-            message,
-        });
-    }
-
     /**
      * A convenience method to handle promises with toast notifications.
      * @param promise - The promise to handle, or a function that returns a promise.
