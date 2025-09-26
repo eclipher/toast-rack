@@ -1,8 +1,7 @@
 import { ToastContainer } from "../components-lit/toast-container";
-import type { ToasterOptions } from "../core/types";
 import { generateId } from "../utils-lit/generate-id";
 import { addToast, findToast, updateToast } from "./store";
-import type { ToastData, ToastDataFull } from "../types";
+import type { ToastData, ToastDataFull, ToasterOptions } from "../types";
 
 export function mountToaster(options?: ToasterOptions) {
     const existingContainer =
@@ -15,7 +14,13 @@ export function mountToaster(options?: ToasterOptions) {
     }
 
     const container = new ToastContainer();
-    if (options?.position) container.position = options.position;
+
+    const { position, ...restOptions } = options || {};
+    if (position) container.position = position;
+    container.defaultToastOptions = {
+        ...container.defaultToastOptions,
+        ...restOptions,
+    };
     document.body.append(container);
 
     return container;

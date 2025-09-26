@@ -5,14 +5,18 @@ import { createRef, ref, type Ref } from "lit/directives/ref.js";
 
 import type { ToastPosition } from "../core/types";
 import { SignalWatcher } from "@lit-labs/preact-signals";
-import { toasts } from "../core-lit/store";
+import { removeToast, toasts } from "../core-lit/store";
 
 import "./toast";
+import type { ToastData } from "../types";
 
 @customElement("toast-rack-lit")
 export class ToastContainer extends SignalWatcher(LitElement) {
     @property({ type: String })
     position: ToastPosition = "top-right";
+
+    @property({ attribute: false })
+    defaultToastOptions: Omit<ToastData, "id"> = { dismissible: true };
 
     containerRef: Ref<HTMLDivElement> = createRef();
     firstUpdated(): void {
@@ -30,7 +34,12 @@ export class ToastContainer extends SignalWatcher(LitElement) {
             ${repeat(
                 toasts.value,
                 (toast) => toast.id,
-                (toast) => html`<toast-el .data=${toast}> </toast-el>`,
+                (toast) =>
+                    html`<toast-el
+                        .data=${{ ...this.defaultToastOptions, ...toast }}
+                        .handleDismiss=${() => removeToast(toast.id)}
+                    >
+                    </toast-el>`,
             )}
         </div>`;
     }

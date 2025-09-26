@@ -4,6 +4,7 @@ import { createRef, ref } from "lit/directives/ref.js";
 import { unsafeSVG } from "lit/directives/unsafe-svg.js";
 import { styleMap } from "lit/directives/style-map.js";
 import type { ToastDataFull } from "../types";
+import { closeIcon } from "../utils-lit/icons";
 
 @customElement("toast-el")
 export class Toast extends LitElement {
@@ -12,9 +13,20 @@ export class Toast extends LitElement {
         message: "",
     };
 
+    @property({ attribute: false })
+    handleDismiss?: () => void;
+
     toastRef = createRef<HTMLElement>();
 
     render() {
+        const dismissButton = html`<button
+            class="toast-close"
+            @click=${() => this.handleDismiss?.()}
+            aria-label="Dismiss"
+        >
+            ${unsafeSVG(closeIcon)}
+        </button>`;
+
         return html`<article
             class="toast"
             style=${this.data.style ? styleMap(this.data.style) : ""}
@@ -22,21 +34,24 @@ export class Toast extends LitElement {
             data-styled="true"
         >
             ${this.data.icon
-                ? html`<span class="toast-icon"
-                      >${unsafeSVG(this.data.icon)}</span
-                  >`
+                ? html`<span class="toast-icon">
+                      ${unsafeSVG(this.data.icon)}
+                  </span>`
                 : ""}
             <div class="toast-content">
                 <p class="toast-title">${this.data.title}</p>
                 <p class="toast-message">${this.data.message}</p>
             </div>
+            ${this.data.dismissible ? dismissButton : ""}
         </article>`;
     }
 
-    connectedCallback(): void {
+    connectedCallback() {
         super.connectedCallback();
-        // Add the "visible" class with setTimeout to trigger CSS transitions
-        setTimeout(() => this.toastRef.value?.classList.add("visible"), 0);
+        // Add the "visible" class to trigger CSS transitions
+        requestAnimationFrame(() =>
+            this.toastRef.value?.classList.add("visible"),
+        );
     }
 
     static styles = css`

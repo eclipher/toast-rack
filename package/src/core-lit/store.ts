@@ -16,3 +16,7 @@ export function updateToast(id: string, updatedFields: Partial<ToastDataFull>) {
         toast.id === id ? { ...toast, ...updatedFields } : toast,
     );
 }
+
+export function removeToast(id: string) {
+    toasts.value = toasts.value.filter((toast) => toast.id !== id);
+}
