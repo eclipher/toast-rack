@@ -1,5 +1,5 @@
 import { signal } from "@lit-labs/preact-signals";
-import type { ToastDataFull } from "./toaster";
+import type { ToastDataFull } from "../types";
 
 export const toasts = signal<ToastDataFull[]>([]);
 

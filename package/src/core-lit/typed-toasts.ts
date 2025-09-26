@@ -6,7 +6,8 @@ import {
     successIcon,
     warningIcon,
 } from "../utils-lit/icons";
-import { basicToast, dispatchToast, type ToastData } from "./toaster";
+import { basicToast, dispatchToast } from "./toaster";
+import type { ToastData } from "../types";
 
 function createTypeDispatcher(
     type: ToastType,

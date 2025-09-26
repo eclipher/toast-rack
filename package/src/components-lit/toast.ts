@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { createRef, ref } from "lit/directives/ref.js";
 import { unsafeSVG } from "lit/directives/unsafe-svg.js";
 import { styleMap } from "lit/directives/style-map.js";
-import type { ToastDataFull } from "../core-lit/toaster";
+import type { ToastDataFull } from "../types";
 
 @customElement("toast-el")
 export class Toast extends LitElement {

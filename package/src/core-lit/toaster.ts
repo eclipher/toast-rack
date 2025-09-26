@@ -1,8 +1,8 @@
-import type { StyleInfo } from "lit/directives/style-map.js";
 import { ToastContainer } from "../components-lit/toast-container";
 import type { ToasterOptions } from "../core/types";
 import { generateId } from "../utils-lit/generate-id";
 import { addToast, findToast, updateToast } from "./store";
+import type { ToastData, ToastDataFull } from "../types";
 
 export function mountToaster(options?: ToasterOptions) {
     const existingContainer =
@@ -19,20 +19,6 @@ export function mountToaster(options?: ToasterOptions) {
     document.body.append(container);
 
     return container;
-}
-
-// user facing
-export interface ToastData {
-    id?: string;
-    title?: string;
-    icon?: string;
-    style?: StyleInfo;
-}
-
-// everything about a toast, for state management
-export interface ToastDataFull extends ToastData {
-    id: string;
-    message: string;
 }
 
 export function dispatchToast(message: string, options?: ToastData) {
