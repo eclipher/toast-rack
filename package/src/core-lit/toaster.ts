@@ -3,17 +3,19 @@ import { generateId } from "../utils-lit/generate-id";
 import { addToast, findToast, updateToast } from "./store";
 import type { ToastData, ToastDataFull, ToasterOptions } from "../types";
 
+let container: ToastContainer | null = null;
+export { container as containerInstance };
+
 export function mountToaster(options?: ToasterOptions) {
-    const existingContainer =
-        document.querySelector<ToastContainer>("toast-rack-lit");
-    if (existingContainer) {
+    document.querySelector<ToastContainer>("toast-rack-lit");
+    if (container) {
         console.warn(
             "Toast container Lit already exists. Using the existing one.",
         );
-        return existingContainer;
+        return container;
     }
 
-    const container = new ToastContainer();
+    container = new ToastContainer();
 
     const { position, ...restOptions } = options || {};
     if (position) container.position = position;

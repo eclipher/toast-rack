@@ -18,9 +18,9 @@ export class ToastContainer extends SignalWatcher(LitElement) {
     @property({ attribute: false })
     defaultToastOptions: Omit<ToastData, "id"> = { dismissible: true };
 
-    containerRef: Ref<HTMLDivElement> = createRef();
+    containerElementRef: Ref<HTMLDivElement> = createRef();
     firstUpdated(): void {
-        this.containerRef.value?.showPopover();
+        this.containerElementRef.value?.showPopover();
     }
 
     render() {
@@ -29,7 +29,7 @@ export class ToastContainer extends SignalWatcher(LitElement) {
         return html`<div
             class="toast-container ${positionClasses}"
             popover="manual"
-            ${ref(this.containerRef)}
+            ${ref(this.containerElementRef)}
         >
             ${repeat(
                 toasts.value,
