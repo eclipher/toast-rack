@@ -17,6 +17,7 @@ export type ToastData = {
     icon?: string;
     style?: StyleInfo;
     dismissible?: boolean;
+    durationMs?: number;
 };
 
 // everything about a toast, for state management
