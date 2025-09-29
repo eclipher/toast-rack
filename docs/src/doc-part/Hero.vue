@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import Button from "@/component/button.vue";
-import { toaster } from "../toaster";
 import { NpmIcon, GitHubIcon } from "vue3-simple-icons";
 import { toast } from "toast-rack";
 
 function showDemo() {
     const promise = new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toaster.promise(
+    toast.promise(
         promise,
         {
             loading: "Preparing your toast...",
@@ -15,13 +14,9 @@ function showDemo() {
             error: "Failed to prepare your toast.",
         },
         {
-            durationMs: 1500,
+            durationMs: 3000,
         },
     );
-}
-
-function showDemoLit() {
-    toast("This is a toast from the Lit version!");
 }
 </script>
 
@@ -42,13 +37,6 @@ function showDemoLit() {
                 <Button
                     class="bg-white dark:bg-white text-primary font-bold"
                     @click="showDemo()"
-                >
-                    Make a Toast
-                </Button>
-
-                <Button
-                    class="bg-white dark:bg-white text-primary font-bold"
-                    @click="showDemoLit()"
                 >
                     Make a Toast
                 </Button>

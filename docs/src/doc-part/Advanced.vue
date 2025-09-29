@@ -19,7 +19,7 @@ const advancedUsages: {
                 setTimeout(Math.random() < 0.5 ? resolve : reject, 1000);
             });
 
-            toaster.promise(promise, {
+            toast.promise(promise, {
                 loading: "Saving...",
                 success: "Saved successfully.",
                 error: "Failed to save.",
@@ -28,7 +28,7 @@ const advancedUsages: {
         snippet: `const promise = new Promise((resolve, reject) => {
     setTimeout(Math.random() < 0.5 ? resolve : reject, 1000);
 });
-toaster.promise(promise, {
+toast.promise(promise, {
     loading: "Saving...",
     success: "Saved successfully.",
     error: "Failed to save.",

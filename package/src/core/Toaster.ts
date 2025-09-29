@@ -6,29 +6,8 @@ import type {
     ToastOptions,
     ToastOptionsFull,
     ToastPosition,
-    ToastType,
 } from "./types";
-import { registerCustomElement, resolveValue } from "./utils";
-
-type PromiseHandler<T> = {
-    /**
-     * The loading message.
-     */
-    loading: string;
-    /**
-     * The success message or a function that returns the message.
-     */
-    success: string | ((data: T) => string);
-    /**
-     * The error message or a function that returns the message.
-     */
-    error: string | ((error: unknown) => string);
-
-    /**
-     * Optional callback to run after the promise is resolved or rejected.
-     */
-    finally?: () => void;
-};
+import { registerCustomElement } from "./utils";
 
 export class Toaster {
     defaultOptions: ToasterOptions = {
@@ -167,36 +146,5 @@ export class Toaster {
         return this.#createToast({ ...options, message, unstyled: true });
     }
 
-    /**
-     * A convenience method to handle promises with toast notifications.
-     * @param promise - The promise to handle, or a function that returns a promise.
-     * @param handlers - An object containing loading, success, and error messages, as well as an optional finally callback.
-     * @param options - Additional options for the toast.
-     * @returns The ID of the toast.
-     */
-    async promise<T>(
-        promise: Promise<T> | (() => Promise<T>),
-        handlers: PromiseHandler<T>,
-        options: Omit<Partial<ToastOptions>, "type" | "id"> = {},
-    ) {
-        const id = this.loading(handlers.loading, {
-            durationMs: Infinity, // Keep the loading toast on screen indefinitely until resolved (in case user specifies `durationMs`)
-            ...options,
-        });
 
-        const p = resolveValue(promise);
-
-        try {
-            const data = await p;
-            const successMessage = resolveValue(handlers.success, data);
-            this.success(successMessage, { id, ...options });
-        } catch (err) {
-            const errorMessage = resolveValue(handlers.error, err);
-            this.error(errorMessage, { id, ...options });
-        } finally {
-            handlers.finally?.();
-        }
-
-        return id;
-    }
 }

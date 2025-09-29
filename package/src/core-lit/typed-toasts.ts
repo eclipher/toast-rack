@@ -1,4 +1,3 @@
-import type { ToastType } from "../core/types";
 import {
     errorIcon,
     infoIcon,
@@ -7,7 +6,28 @@ import {
     warningIcon,
 } from "../utils-lit/icons";
 import { basicToast, dispatchToast } from "./toaster";
-import type { ToastData } from "../types";
+import type { ToastData, ToastType } from "../types";
+import { resolveValue } from "../utils-lit/resolve-value";
+
+type PromiseHandler<T> = {
+    /**
+     * The loading message.
+     */
+    loading: string;
+    /**
+     * The success message or a function that returns the message.
+     */
+    success: string | ((data: T) => string);
+    /**
+     * The error message or a function that returns the message.
+     */
+    error: string | ((error: unknown) => string);
+
+    /**
+     * Optional callback to run after the promise is resolved or rejected.
+     */
+    finally?: () => void;
+};
 
 function createTypeDispatcher(
     type: ToastType,
@@ -33,4 +53,36 @@ export const toastFull = Object.assign(basicToast, {
         loadingIcon,
         "var(--message-color)",
     ),
+    /**
+     * A convenience method to handle promises with toast notifications.
+     * @param promise - The promise to handle, or a function that returns a promise.
+     * @param handlers - An object containing loading, success, and error messages, as well as an optional finally callback.
+     * @param options - Additional options for the toast.
+     * @returns The ID of the toast.
+     */
+    promise: async function <T>(
+        promise: Promise<T>,
+        handlers: PromiseHandler<T>,
+        options?: ToastData,
+    ) {
+        const id = this.loading(handlers.loading, {
+            ...options,
+            durationMs: Infinity, // Keep the loading toast on screen indefinitely until resolved
+        });
+
+        const p = resolveValue(promise);
+
+        try {
+            const data = await p;
+            const successMessage = resolveValue(handlers.success, data);
+            this.success(successMessage, { id, ...options });
+        } catch (err) {
+            const errorMessage = resolveValue(handlers.error, err);
+            this.error(errorMessage, { id, ...options });
+        } finally {
+            handlers.finally?.();
+        }
+
+        return id;
+    },
 });
